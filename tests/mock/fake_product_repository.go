@@ -1,8 +1,8 @@
 package mock
 
 import (
-	"github.com/vitormoschetta/go/interfaces"
-	"github.com/vitormoschetta/go/models"
+	"github.com/vitormoschetta/go/src/interfaces"
+	"github.com/vitormoschetta/go/src/models"
 )
 
 type FakeProductRepository struct {

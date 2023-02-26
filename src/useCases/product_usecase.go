@@ -1,14 +1,16 @@
 package useCases
 
 import (
-	"github.com/vitormoschetta/go/interfaces"
-	"github.com/vitormoschetta/go/models"
+	"github.com/vitormoschetta/go/src/interfaces"
+	"github.com/vitormoschetta/go/src/models"
 )
 
 type ProductUseCase struct {
 	ProductRepository interfaces.ProductRepository
 }
 
+// Função que retorna uma instância de ProductUseCase
+// Injetamos a dependência de ProductRepository (interface)
 func NewProductUseCase(pR interfaces.ProductRepository) interfaces.ProductUseCase {
 	return &ProductUseCase{ProductRepository: pR}
 }

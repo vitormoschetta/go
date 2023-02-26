@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/vitormoschetta/go/models"
+	"github.com/vitormoschetta/go/src/models"
+	"github.com/vitormoschetta/go/src/useCases"
 	"github.com/vitormoschetta/go/tests/mock"
-	"github.com/vitormoschetta/go/useCases"
 )
 
 func Test_With_Product_Add_With_Valid_Data(t *testing.T) {
