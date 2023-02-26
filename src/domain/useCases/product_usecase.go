@@ -1,8 +1,8 @@
 package useCases
 
 import (
-	"github.com/vitormoschetta/go/src/interfaces"
-	"github.com/vitormoschetta/go/src/models"
+	"github.com/vitormoschetta/go/src/domain/interfaces"
+	"github.com/vitormoschetta/go/src/domain/models"
 )
 
 type ProductUseCase struct {

@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"github.com/vitormoschetta/go/src/models"
+	"github.com/vitormoschetta/go/src/domain/models"
 )
 
 type ProductRepository interface {

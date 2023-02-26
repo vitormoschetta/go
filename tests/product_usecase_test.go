@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/vitormoschetta/go/src/models"
-	"github.com/vitormoschetta/go/src/useCases"
+	"github.com/vitormoschetta/go/src/domain/models"
+	"github.com/vitormoschetta/go/src/domain/useCases"
 	"github.com/vitormoschetta/go/tests/mock"
 )
 
