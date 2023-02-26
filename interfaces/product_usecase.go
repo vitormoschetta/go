@@ -7,5 +7,5 @@ import (
 type ProductUseCase interface {
 	Save(p models.Product) models.Response
 	Update(p models.Product) models.Response
-	Delete(id int64) models.Response
+	Delete(id string) models.Response
 }

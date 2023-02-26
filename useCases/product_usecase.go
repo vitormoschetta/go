@@ -42,6 +42,11 @@ func (u *ProductUseCase) Update(p models.Product) models.Response {
 	if len(errors) > 0 {
 		return models.Response{Errors: errors}
 	}
+	product := u.ProductRepository.FindByID(p.ID)
+	if product == nil {
+		return models.Response{Errors: []string{"Product not found"}}
+	}
+	product.Update(p.Name, p.Price)
 	err := u.ProductRepository.Update(p)
 	if err != nil {
 		return models.Response{Errors: []string{err.Error()}}
@@ -49,7 +54,7 @@ func (u *ProductUseCase) Update(p models.Product) models.Response {
 	return models.Response{}
 }
 
-func (u *ProductUseCase) Delete(id int64) models.Response {
+func (u *ProductUseCase) Delete(id string) models.Response {
 	err := u.ProductRepository.Delete(id)
 	if err != nil {
 		return models.Response{Errors: []string{err.Error()}}

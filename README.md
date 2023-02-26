@@ -33,6 +33,7 @@ go build main.go
 #### Executar Testes
 
 ```bash 
+cd tests  
 go test
 ```
 

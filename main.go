@@ -1,13 +1,7 @@
 package main
 
-import (
-	"fmt"
-	"github.com/vitormoschetta/go/calc"
-	"github.com/vitormoschetta/go/services"
-)
+import "fmt"
 
 func main() {
-	calc.Execute()
-	services.Execute()
-	fmt.Println("Fim!")
+	fmt.Println("Hello, World!")
 }

@@ -27,7 +27,7 @@ func (r *FakeProductRepository) Update(p models.Product) error {
 	return nil
 }
 
-func (r *FakeProductRepository) Delete(id int64) error {
+func (r *FakeProductRepository) Delete(id string) error {
 	for i, product := range r.Products {
 		if product.ID == id {
 			r.Products = append(r.Products[:i], r.Products[i+1:]...)
@@ -40,7 +40,7 @@ func (r *FakeProductRepository) FindAll() []models.Product {
 	return r.Products
 }
 
-func (r *FakeProductRepository) FindByID(id int64) *models.Product {
+func (r *FakeProductRepository) FindByID(id string) *models.Product {
 	for _, product := range r.Products {
 		if product.ID == id {
 			return &product
