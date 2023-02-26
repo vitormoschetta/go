@@ -2,16 +2,15 @@ package useCases
 
 import (
 	"github.com/vitormoschetta/go/interfaces"
-	"github.com/vitormoschetta/go/mock"
 	"github.com/vitormoschetta/go/models"
 )
 
 type ProductUseCase struct {
-	ProductRepository mock.FakeProductRepository
+	ProductRepository interfaces.ProductRepository
 }
 
-func NewProductUseCase() interfaces.ProductUseCase {
-	return &ProductUseCase{}
+func NewProductUseCase(pR interfaces.ProductRepository) interfaces.ProductUseCase {
+	return &ProductUseCase{ProductRepository: pR}
 }
 
 func (u *ProductUseCase) Save(p models.Product) models.Response {
