@@ -1,3 +1,12 @@
+# Get Started
+
+#### Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+
 # Go-Tutorial
 
 #### Inicializar um módulo
