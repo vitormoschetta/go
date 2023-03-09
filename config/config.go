@@ -1,24 +1,56 @@
 package config
 
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
+type DbConfig struct {
+	User     string
+	Password string
+	Host     string
+	Port     string
+	Name     string
+}
+
 var (
-	ConnectionString string
-	ApiPort          string
+	ApiPort string
+	Db      DbConfig
 )
 
 func Load() {
-	// var err error
+	err := godotenv.Load()
+	if err != nil {
+		log.Print("No .env file found")
+	}
 
-	// if err = godotenv.Load(); err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	Db = DbConfig{}
 
-	// ConnectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-	// 	os.Getenv("DB_USER"),
-	// 	os.Getenv("DB_PASSWORD"),
-	// 	os.Getenv("DB_HOST"),
-	// 	os.Getenv("DB_PORT"),
-	// 	os.Getenv("DB_NAME"),
-	// )
+	Db.User = os.Getenv("DB_USER")
+	if Db.User == "" {
+		Db.User = "go"
+	}
+	Db.Password = os.Getenv("DB_PASSWORD")
+	if Db.Password == "" {
+		Db.Password = "go"
+	}
+	Db.Host = os.Getenv("DB_HOST")
+	if Db.Host == "" {
+		Db.Host = "localhost"
+	}
+	Db.Port = os.Getenv("DB_PORT")
+	if Db.Port == "" {
+		Db.Port = "3306"
+	}
+	Db.Name = os.Getenv("DB_NAME")
+	if Db.Name == "" {
+		Db.Name = "go"
+	}
 
-	ApiPort = "5000"
+	ApiPort = os.Getenv("API_PORT")
+	if ApiPort == "" {
+		ApiPort = "5000"
+	}
 }
