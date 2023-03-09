@@ -1,8 +1,8 @@
 package models
 
 type Response struct {
-	Errors []string `json:"errors"`
-	Succes bool     `json:"success"`
+	Errors []string    `json:"errors"`
+	Data   interface{} `json:"data"`
 }
 
 func NewResponse() Response {
