@@ -6,15 +6,6 @@
 docker-compose up -d
 ```
 
-
-# Go-Tutorial
-
-#### Inicializar um módulo
-
-```bash
-go mod init <module-name>
-```
-
 #### Instalar dependências
 
 ```bash

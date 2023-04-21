@@ -1,4 +1,4 @@
-package httpServer
+package webserver
 
 import (
 	"net/http"
@@ -8,8 +8,8 @@ import (
 	"github.com/vitormoschetta/go/internal/application/useCases"
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
-	"github.com/vitormoschetta/go/internal/infra/httpServer/controllers"
-	"github.com/vitormoschetta/go/internal/infra/httpServer/routers"
+	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
+	"github.com/vitormoschetta/go/internal/infra/webserver/routers"
 )
 
 func StartServer() {

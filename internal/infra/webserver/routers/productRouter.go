@@ -2,7 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/vitormoschetta/go/internal/infra/httpServer/controllers"
+	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
 )
 
 func AddProductRouter(router *gin.Engine, c *controllers.ProductController) {

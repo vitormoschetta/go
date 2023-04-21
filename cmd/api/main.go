@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/vitormoschetta/go/internal/infra/httpServer"
+	"github.com/vitormoschetta/go/internal/infra/webserver"
 )
 
 func main() {
-	httpServer.StartServer()
+	webserver.StartServer()
 }
