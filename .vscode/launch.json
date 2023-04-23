@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${fileDirname}/../cmd/api/main.go",
+            "program": "${fileDirname}/../cmd/main.go",
         }
     ]
 }

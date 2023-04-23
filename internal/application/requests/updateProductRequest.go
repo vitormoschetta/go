@@ -5,9 +5,10 @@ import (
 )
 
 type UpdateProductRequest struct {
-	ID    string  `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Price      float64 `json:"price"`
+	CategoryId string  `json:"category_id"`
 }
 
 func (p *UpdateProductRequest) Validate() (response models.Response) {

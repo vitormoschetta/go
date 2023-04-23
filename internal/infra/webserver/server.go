@@ -16,15 +16,20 @@ func StartServer() {
 	config.Load()
 	db := database.ConnectDB()
 
-	repository := repositories.NewProductRepository(db)
-	useCase := useCases.NewProductUseCase(repository)
-	controller := controllers.NewProductController(repository, useCase)
+	categoryRepository := repositories.NewCategoryRepository(db)
+	categoryUseCase := useCases.NewCategoryUseCase(categoryRepository)
+	categoryController := controllers.NewCategoryController(categoryRepository, categoryUseCase)
+
+	productRepository := repositories.NewProductRepository(db)
+	productUseCase := useCases.NewProductUseCase(productRepository, categoryRepository)
+	productController := controllers.NewProductController(productRepository, productUseCase)
 
 	router := gin.Default()
-	routers.AddProductRouter(router, controller)
+	routers.AddCategoryRouter(router, categoryController)
+	routers.AddProductRouter(router, productController)
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello World!"})
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
 	router.Run(":" + config.ApiPort)

@@ -21,26 +21,36 @@ func NewProductController(repository interfaces.IProductRepository, useCase *use
 	}
 }
 
-func (c *ProductController) GetProducts(ctx *gin.Context) {
-	products, err := c.Repository.FindAll()
+func (c *ProductController) GetAll(ctx *gin.Context) {
+	items, err := c.Repository.FindAll()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, products)
+	ctx.JSON(http.StatusOK, items)
 }
 
-func (c *ProductController) GetProduct(ctx *gin.Context) {
+func (c *ProductController) Get(ctx *gin.Context) {
 	id := ctx.Param("id")
-	product, err := c.Repository.FindByID(id)
+	item, err := c.Repository.FindByID(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusOK, product)
+	ctx.JSON(http.StatusOK, item)
 }
 
-func (c *ProductController) PostProduct(ctx *gin.Context) {
+func (c *ProductController) GetByCategory(ctx *gin.Context) {
+	categoryId := ctx.Param("category_id")
+	items, err := c.Repository.FindByCategory(categoryId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, items)
+}
+
+func (c *ProductController) Post(ctx *gin.Context) {
 	var request requests.CreateProductRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -50,7 +60,7 @@ func (c *ProductController) PostProduct(ctx *gin.Context) {
 	ctx.JSON(statusCode, response)
 }
 
-func (c *ProductController) PutProduct(ctx *gin.Context) {
+func (c *ProductController) Put(ctx *gin.Context) {
 	var request requests.UpdateProductRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -60,8 +70,28 @@ func (c *ProductController) PutProduct(ctx *gin.Context) {
 	ctx.JSON(statusCode, response)
 }
 
-func (c *ProductController) DeleteProduct(ctx *gin.Context) {
+func (c *ProductController) Delete(ctx *gin.Context) {
 	id := ctx.Param("id")
 	response, statusCode := c.UseCase.Delete(id)
+	ctx.JSON(statusCode, response)
+}
+
+func (c *ProductController) PutPromotion(ctx *gin.Context) {
+	var request requests.ApplyPromotionProductRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	response, statusCode := c.UseCase.ApplyPromotion(request)
+	ctx.JSON(statusCode, response)
+}
+
+func (c *ProductController) PutPromotionbyCategory(ctx *gin.Context) {
+	var request requests.ApplyPromotionProductByCategoryRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(request)
 	ctx.JSON(statusCode, response)
 }

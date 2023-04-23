@@ -5,8 +5,9 @@ import (
 )
 
 type CreateProductRequest struct {
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	Name       string  `json:"name"`
+	Price      float64 `json:"price"`
+	CategoryId string  `json:"category_id"`
 }
 
 func (p *CreateProductRequest) Validate() (response models.Response) {
@@ -16,9 +17,12 @@ func (p *CreateProductRequest) Validate() (response models.Response) {
 	if p.Price <= 0 {
 		response.Errors = append(response.Errors, "Price is less than or equal to zero")
 	}
+	if p.CategoryId == "" {
+		response.Errors = append(response.Errors, "Category is required")
+	}
 	return
 }
 
-func (p *CreateProductRequest) ToProductModel() models.Product {
-	return models.NewProduct(p.Name, p.Price)
+func (p *CreateProductRequest) ToProductModel(categoryy models.Category) models.Product {
+	return models.NewProduct(p.Name, p.Price, categoryy)
 }

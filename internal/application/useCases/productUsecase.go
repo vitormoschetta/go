@@ -9,21 +9,32 @@ import (
 )
 
 type ProductUseCase struct {
-	ProductRepository interfaces.IProductRepository
+	ProductRepository  interfaces.IProductRepository
+	CategoryRepository interfaces.IRepository[models.Category]
 }
 
-func NewProductUseCase(pR interfaces.IProductRepository) *ProductUseCase {
-	return &ProductUseCase{ProductRepository: pR}
+func NewProductUseCase(pR interfaces.IProductRepository, cR interfaces.IRepository[models.Category]) *ProductUseCase {
+	return &ProductUseCase{ProductRepository: pR, CategoryRepository: cR}
 }
 
-func (u *ProductUseCase) Save(p requests.CreateProductRequest) (response models.Response, statusCode int) {
-	response = p.Validate()
+func (u *ProductUseCase) Save(request requests.CreateProductRequest) (response models.Response, statusCode int) {
+	response = request.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400
 	}
-	product := p.ToProductModel()
+	category, err := u.CategoryRepository.FindByID(request.CategoryId)
+	if err != nil {
+		log.Println("Error on find category: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	if category.ID == "" {
+		response.Errors = append(response.Errors, "Category not found")
+		return response, 404
+	}
+	product := request.ToProductModel(category)
 	response.Data = product
-	err := u.ProductRepository.Save(product)
+	err = u.ProductRepository.Save(product)
 	if err != nil {
 		log.Println("Error on save product: ", err)
 		response.Errors = append(response.Errors, err.Error())
@@ -32,12 +43,12 @@ func (u *ProductUseCase) Save(p requests.CreateProductRequest) (response models.
 	return response, 201
 }
 
-func (u *ProductUseCase) Update(p requests.UpdateProductRequest) (response models.Response, statusCode int) {
-	response = p.Validate()
+func (u *ProductUseCase) Update(request requests.UpdateProductRequest) (response models.Response, statusCode int) {
+	response = request.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400
 	}
-	product, err := u.ProductRepository.FindByID(p.ID)
+	product, err := u.ProductRepository.FindByID(request.ID)
 	if err != nil {
 		log.Println("Error on find product: ", err)
 		response.Errors = append(response.Errors, err.Error())
@@ -47,7 +58,17 @@ func (u *ProductUseCase) Update(p requests.UpdateProductRequest) (response model
 		response.Errors = append(response.Errors, "Product not found")
 		return response, 404
 	}
-	product.Update(p.Name, p.Price)
+	category, err := u.CategoryRepository.FindByID(request.CategoryId)
+	if err != nil {
+		log.Println("Error on find category: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	if category.ID == "" {
+		response.Errors = append(response.Errors, "Category not found")
+		return response, 404
+	}
+	product.Update(request.Name, request.Price, category)
 	response.Data = product
 	err = u.ProductRepository.Update(product)
 	if err != nil {
@@ -73,6 +94,56 @@ func (u *ProductUseCase) Delete(id string) (response models.Response, statusCode
 	err = u.ProductRepository.Delete(product.ID)
 	if err != nil {
 		log.Println("Error on delete product: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	return response, 200
+}
+
+func (u *ProductUseCase) ApplyPromotion(request requests.ApplyPromotionProductRequest) (response models.Response, statusCode int) {
+	response = request.Validate()
+	if len(response.Errors) > 0 {
+		return response, 400
+	}
+	product, err := u.ProductRepository.FindByID(request.ProductId)
+	if err != nil {
+		log.Println("Error on find product: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	if product.ID == "" {
+		response.Errors = append(response.Errors, "Product not found")
+		return response, 404
+	}
+	product.ApplyPromotion(request.Percentage)
+	response.Data = product
+	err = u.ProductRepository.Update(product)
+	if err != nil {
+		log.Println("Error on apply promotion on product: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	return response, 200
+}
+
+func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(request requests.ApplyPromotionProductByCategoryRequest) (response models.Response, statusCode int) {
+	response = request.Validate()
+	if len(response.Errors) > 0 {
+		return response, 400
+	}
+	category, err := u.CategoryRepository.FindByID(request.CategoryId)
+	if err != nil {
+		log.Println("Error on find category: ", err)
+		response.Errors = append(response.Errors, err.Error())
+		return response, 500
+	}
+	if category.ID == "" {
+		response.Errors = append(response.Errors, "Category not found")
+		return response, 404
+	}
+	err = u.ProductRepository.ApplyPromotionOnProductsByCategory(request.CategoryId, request.Percentage)
+	if err != nil {
+		log.Println("Error on apply promotion on products: ", err)
 		response.Errors = append(response.Errors, err.Error())
 		return response, 500
 	}

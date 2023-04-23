@@ -6,45 +6,65 @@ import (
 )
 
 type ProductRepositoryFake struct {
-	Products []models.Product
+	Db []models.Product
 }
 
 func NewProductRepositoryFake() interfaces.IProductRepository {
-	return &ProductRepositoryFake{}
+	return &ProductRepositoryFake{
+		Db: []models.Product{},
+	}
+}
+
+func (r *ProductRepositoryFake) FindAll() (products []models.Product, err error) {
+	return r.Db, nil
+}
+
+func (r *ProductRepositoryFake) FindByID(id string) (product models.Product, err error) {
+	for _, product := range r.Db {
+		if product.ID == id {
+			return product, nil
+		}
+	}
+	return models.Product{}, nil
 }
 
 func (r *ProductRepositoryFake) Save(p models.Product) error {
-	r.Products = append(r.Products, p)
+	r.Db = append(r.Db, p)
 	return nil
 }
 
 func (r *ProductRepositoryFake) Update(p models.Product) error {
-	for i, product := range r.Products {
+	for i, product := range r.Db {
 		if product.ID == p.ID {
-			r.Products[i] = p
+			r.Db[i] = p
 		}
 	}
 	return nil
 }
 
 func (r *ProductRepositoryFake) Delete(id string) error {
-	for i, product := range r.Products {
+	for i, product := range r.Db {
 		if product.ID == id {
-			r.Products = append(r.Products[:i], r.Products[i+1:]...)
+			r.Db = append(r.Db[:i], r.Db[i+1:]...)
 		}
 	}
 	return nil
 }
 
-func (r *ProductRepositoryFake) FindAll() ([]models.Product, error) {
-	return r.Products, nil
-}
-
-func (r *ProductRepositoryFake) FindByID(id string) (models.Product, error) {
-	for _, product := range r.Products {
-		if product.ID == id {
-			return product, nil
+func (r *ProductRepositoryFake) FindByCategory(categoryID string) (products []models.Product, err error) {
+	for _, product := range r.Db {
+		if product.Category.ID == categoryID {
+			products = append(products, product)
 		}
 	}
-	return models.Product{}, nil
+	return products, nil
+}
+
+func (r *ProductRepositoryFake) ApplyPromotionOnProductsByCategory(categoryId string, percentage float64) error {
+	for i, product := range r.Db {
+		if product.Category.ID == categoryId {
+			r.Db[i].Price = product.Price - (product.Price * percentage)
+		}
+	}
+	return nil
 }
