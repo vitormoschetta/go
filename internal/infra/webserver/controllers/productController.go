@@ -21,6 +21,15 @@ func NewProductController(repository interfaces.IProductRepository, useCase *use
 	}
 }
 
+// Show Products godoc
+//
+// @Summary      Show all products
+// @Description  Get all products
+// @Tags         products
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  models.Product
+// @Router       /products [get]
 func (c *ProductController) GetAll(ctx *gin.Context) {
 	items, err := c.Repository.FindAll()
 	if err != nil {

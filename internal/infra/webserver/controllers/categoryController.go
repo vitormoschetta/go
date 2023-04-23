@@ -22,6 +22,15 @@ func NewCategoryController(repository interfaces.IRepository[models.Category], u
 	}
 }
 
+// Show Categories godoc
+//
+// @Summary      Show all categories
+// @Description  Get all categories
+// @Tags         categories
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  models.Category
+// @Router       /categories [get]
 func (c *CategoryController) GetAll(ctx *gin.Context) {
 	items, err := c.Repository.FindAll()
 	if err != nil {

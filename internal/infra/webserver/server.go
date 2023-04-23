@@ -1,9 +1,9 @@
 package webserver
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/vitormoschetta/go/config"
 	"github.com/vitormoschetta/go/internal/application/useCases"
 	"github.com/vitormoschetta/go/internal/infra/database"
@@ -25,12 +25,26 @@ func StartServer() {
 	productController := controllers.NewProductController(productRepository, productUseCase)
 
 	router := gin.Default()
-	routers.AddCategoryRouter(router, categoryController)
-	routers.AddProductRouter(router, productController)
 
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	v1 := router.Group("/api/v1")
+	{
+		categories := v1.Group("/categories")
+		{
+			routers.AddCategoryRouter2(categories, categoryController)
+		}
+		products := v1.Group("/products")
+		{
+			routers.AddProductRouter2(products, productController)
+		}
+		health := v1.Group("/health")
+		{
+			health.GET("", func(c *gin.Context) {
+				c.JSON(200, gin.H{"status": "ok"})
+			})
+		}
+	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Run(":" + config.ApiPort)
 }
