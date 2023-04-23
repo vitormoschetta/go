@@ -5,6 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/vitormoschetta/go/config"
+	_ "github.com/vitormoschetta/go/docs"
 	"github.com/vitormoschetta/go/internal/application/useCases"
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"

@@ -1,0 +1,53 @@
+definitions:
+  models.Category:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      category:
+        $ref: '#/definitions/models.Category'
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+      summary: Show all categories
+      tags:
+      - categories
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+      summary: Show all products
+      tags:
+      - products
+swagger: "2.0"
