@@ -24,4 +24,4 @@ go run cmd/main.go
 go test ./...
 ```
 
-Obs: Os testes devem estar em um arquivo com o nome `*_test.go` e a função de teste deve começar com `Test`.
+# Docs
