@@ -23,5 +23,3 @@ go run cmd/main.go
 ```bash 
 go test ./...
 ```
-
-# Docs
