@@ -10,6 +10,14 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}/../cmd/main.go",
+            "env": {
+                "PORT": "5000",                
+            },
+            "args": [],
+            "showLog": true,
+            "trace": "verbose",
+            "cwd": "${workspaceFolder}",
+            "buildFlags": "-v",
         }
     ]
 }

@@ -49,8 +49,8 @@ func Load() {
 		Db.Name = "go"
 	}
 
-	ApiPort = os.Getenv("API_PORT")
+	ApiPort = os.Getenv("PORT")
 	if ApiPort == "" {
-		ApiPort = "5000"
+		ApiPort = "8080"
 	}
 }
