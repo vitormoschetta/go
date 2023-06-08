@@ -1,13 +1,13 @@
 package product
 
-import "github.com/vitormoschetta/go/internal/application/general"
+import "github.com/vitormoschetta/go/internal/application/common"
 
 type ApplyPromotionProductByCategoryInput struct {
 	CategoryId string  `json:"category_id" binding:"required"`
 	Percentage float64 `json:"percentage" binding:"required"`
 }
 
-func (p *ApplyPromotionProductByCategoryInput) Validate() (output general.Output) {
+func (p *ApplyPromotionProductByCategoryInput) Validate() (output common.Output) {
 	if p.CategoryId == "" {
 		output.Errors = append(output.Errors, "Category is required")
 	}

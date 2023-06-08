@@ -3,20 +3,20 @@ package category
 import (
 	"log"
 
-	generalApplication "github.com/vitormoschetta/go/internal/application/general"
+	applicationCommon "github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/domain/general"
+	"github.com/vitormoschetta/go/internal/domain/common"
 )
 
 type CategoryUseCases struct {
-	Repository general.IRepository[category.Category]
+	Repository common.IRepository[category.Category]
 }
 
-func NewCategoryUseCase(pR general.IRepository[category.Category]) *CategoryUseCases {
+func NewCategoryUseCase(pR common.IRepository[category.Category]) *CategoryUseCases {
 	return &CategoryUseCases{Repository: pR}
 }
 
-func (u *CategoryUseCases) Create(input CreateCategoryInput) (output generalApplication.Output, statusCode int) {
+func (u *CategoryUseCases) Create(input CreateCategoryInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
@@ -32,7 +32,7 @@ func (u *CategoryUseCases) Create(input CreateCategoryInput) (output generalAppl
 	return output, 201
 }
 
-func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output generalApplication.Output, statusCode int) {
+func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
@@ -58,7 +58,7 @@ func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output generalAppl
 	return output, 200
 }
 
-func (u *CategoryUseCases) Delete(id string) (output generalApplication.Output, statusCode int) {
+func (u *CategoryUseCases) Delete(id string) (output applicationCommon.Output, statusCode int) {
 	entity, err := u.Repository.FindByID(id)
 	if err != nil {
 		log.Println("Error on find product: ", err)

@@ -3,22 +3,22 @@ package product
 import (
 	"log"
 
-	generalApplication "github.com/vitormoschetta/go/internal/application/general"
+	applicationCommon "github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/domain/general"
+	"github.com/vitormoschetta/go/internal/domain/common"
 	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductUseCase struct {
 	ProductRepository  product.IProductRepository
-	CategoryRepository general.IRepository[category.Category]
+	CategoryRepository common.IRepository[category.Category]
 }
 
-func NewProductUseCase(pR product.IProductRepository, cR general.IRepository[category.Category]) *ProductUseCase {
+func NewProductUseCase(pR product.IProductRepository, cR common.IRepository[category.Category]) *ProductUseCase {
 	return &ProductUseCase{ProductRepository: pR, CategoryRepository: cR}
 }
 
-func (u *ProductUseCase) Create(input CreateProductInput) (output generalApplication.Output, statusCode int) {
+func (u *ProductUseCase) Create(input CreateProductInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
@@ -44,7 +44,7 @@ func (u *ProductUseCase) Create(input CreateProductInput) (output generalApplica
 	return output, 201
 }
 
-func (u *ProductUseCase) Update(input UpdateProductInput) (output generalApplication.Output, statusCode int) {
+func (u *ProductUseCase) Update(input UpdateProductInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
@@ -80,7 +80,7 @@ func (u *ProductUseCase) Update(input UpdateProductInput) (output generalApplica
 	return output, 200
 }
 
-func (u *ProductUseCase) Delete(id string) (output generalApplication.Output, statusCode int) {
+func (u *ProductUseCase) Delete(id string) (output applicationCommon.Output, statusCode int) {
 	product, err := u.ProductRepository.FindByID(id)
 	if err != nil {
 		log.Println("Error on find product: ", err)
@@ -101,7 +101,7 @@ func (u *ProductUseCase) Delete(id string) (output generalApplication.Output, st
 	return output, 200
 }
 
-func (u *ProductUseCase) ApplyPromotion(input ApplyPromotionProductInput) (outpu generalApplication.Output, statusCode int) {
+func (u *ProductUseCase) ApplyPromotion(input ApplyPromotionProductInput) (outpu applicationCommon.Output, statusCode int) {
 	outpu = input.Validate()
 	if len(outpu.Errors) > 0 {
 		return outpu, 400
@@ -127,7 +127,7 @@ func (u *ProductUseCase) ApplyPromotion(input ApplyPromotionProductInput) (outpu
 	return outpu, 200
 }
 
-func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(input ApplyPromotionProductByCategoryInput) (output generalApplication.Output, statusCode int) {
+func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(input ApplyPromotionProductByCategoryInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400

@@ -45,6 +45,10 @@ func (c *ProductController) Get(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	if item.ID == "" {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
 	ctx.JSON(http.StatusOK, item)
 }
 

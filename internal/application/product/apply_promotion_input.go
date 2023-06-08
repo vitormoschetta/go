@@ -1,13 +1,13 @@
 package product
 
-import "github.com/vitormoschetta/go/internal/application/general"
+import "github.com/vitormoschetta/go/internal/application/common"
 
 type ApplyPromotionProductInput struct {
 	ProductId  string  `json:"id" binding:"required"`
 	Percentage float64 `json:"percentage" binding:"required"`
 }
 
-func (p *ApplyPromotionProductInput) Validate() (output general.Output) {
+func (p *ApplyPromotionProductInput) Validate() (output common.Output) {
 	if p.ProductId == "" {
 		output.Errors = append(output.Errors, "Product is required")
 	}

@@ -5,14 +5,14 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/domain/general"
+	"github.com/vitormoschetta/go/internal/domain/common"
 )
 
 type CategoryRepository struct {
 	Db *sql.DB
 }
 
-func NewCategoryRepository(db *sql.DB) general.IRepository[category.Category] {
+func NewCategoryRepository(db *sql.DB) common.IRepository[category.Category] {
 	return &CategoryRepository{Db: db}
 }
 

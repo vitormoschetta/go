@@ -1,6 +1,6 @@
 package product
 
-import "github.com/vitormoschetta/go/internal/application/general"
+import "github.com/vitormoschetta/go/internal/application/common"
 
 type UpdateProductInput struct {
 	ID         string  `json:"id"`
@@ -9,7 +9,7 @@ type UpdateProductInput struct {
 	CategoryId string  `json:"category_id"`
 }
 
-func (p *UpdateProductInput) Validate() (output general.Output) {
+func (p *UpdateProductInput) Validate() (output common.Output) {
 	if p.ID == "" {
 		output.Errors = append(output.Errors, "ID is required")
 	}

@@ -2,14 +2,14 @@ package mock
 
 import (
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/domain/general"
+	"github.com/vitormoschetta/go/internal/domain/common"
 )
 
 type CategoryRepositoryFake struct {
 	Db []category.Category
 }
 
-func NewCategoryRepositoryFake() general.IRepository[category.Category] {
+func NewCategoryRepositoryFake() common.IRepository[category.Category] {
 	return &CategoryRepositoryFake{
 		Db: []category.Category{},
 	}

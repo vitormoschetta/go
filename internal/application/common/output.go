@@ -1,4 +1,4 @@
-package general
+package common
 
 type Output struct {
 	Errors []string    `json:"errors"`
