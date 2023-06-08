@@ -5,8 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/vitormoschetta/go/internal/application/requests"
-	"github.com/vitormoschetta/go/internal/application/useCases"
+	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/tests/mock"
 )
@@ -14,8 +13,8 @@ import (
 func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
-	useCase := useCases.NewCategoryUseCase(repository)
-	request := requests.CreateCategoryRequest{
+	useCase := categoryApplication.NewCategoryUseCase(repository)
+	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
 	// Act
@@ -28,8 +27,8 @@ func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
-	useCase := useCases.NewCategoryUseCase(repository)
-	request := requests.CreateCategoryRequest{
+	useCase := categoryApplication.NewCategoryUseCase(repository)
+	request := categoryApplication.CreateCategoryInput{
 		Name: "",
 	}
 	// Act
@@ -43,8 +42,8 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
-	useCase := useCases.NewCategoryUseCase(repository)
-	request := requests.CreateCategoryRequest{
+	useCase := categoryApplication.NewCategoryUseCase(repository)
+	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
 	response, statusCode := useCase.Save(request)
@@ -52,7 +51,7 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
 	// Act
-	request2 := requests.UpdateCategoryRequest{
+	request2 := categoryApplication.UpdateCategoryInput{
 		ID:   response.Data.(category.Category).ID,
 		Name: "Category 2",
 	}
@@ -66,8 +65,8 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
-	useCase := useCases.NewCategoryUseCase(repository)
-	request := requests.CreateCategoryRequest{
+	useCase := categoryApplication.NewCategoryUseCase(repository)
+	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
 	response, statusCode := useCase.Save(request)
@@ -75,7 +74,7 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
 	// Act
-	request2 := requests.UpdateCategoryRequest{
+	request2 := categoryApplication.UpdateCategoryInput{
 		ID:   uuid.NewString(),
 		Name: "Category 2",
 	}
@@ -89,8 +88,8 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
-	useCase := useCases.NewCategoryUseCase(repository)
-	request := requests.CreateCategoryRequest{
+	useCase := categoryApplication.NewCategoryUseCase(repository)
+	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
 	response, statusCode := useCase.Save(request)
@@ -98,7 +97,7 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
 	// Act
-	request2 := requests.UpdateCategoryRequest{
+	request2 := categoryApplication.UpdateCategoryInput{
 		ID:   uuid.NewString(),
 		Name: "",
 	}

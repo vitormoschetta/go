@@ -1,9 +1,8 @@
-package useCases
+package category
 
 import (
 	"log"
 
-	"github.com/vitormoschetta/go/internal/application/requests"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/general"
 	"github.com/vitormoschetta/go/internal/domain/models"
@@ -17,12 +16,12 @@ func NewCategoryUseCase(pR general.IRepository[category.Category]) *CategoryUseC
 	return &CategoryUseCases{Repository: pR}
 }
 
-func (u *CategoryUseCases) Save(p requests.CreateCategoryRequest) (response models.Response, statusCode int) {
-	response = p.Validate()
+func (u *CategoryUseCases) Save(input CreateCategoryInput) (response models.Response, statusCode int) {
+	response = input.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400
 	}
-	entity := p.ToCategoryEntity()
+	entity := input.ToCategoryEntity()
 	response.Data = entity
 	err := u.Repository.Save(entity)
 	if err != nil {
@@ -33,12 +32,12 @@ func (u *CategoryUseCases) Save(p requests.CreateCategoryRequest) (response mode
 	return response, 201
 }
 
-func (u *CategoryUseCases) Update(p requests.UpdateCategoryRequest) (response models.Response, statusCode int) {
-	response = p.Validate()
+func (u *CategoryUseCases) Update(input UpdateCategoryInput) (response models.Response, statusCode int) {
+	response = input.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400
 	}
-	entity, err := u.Repository.FindByID(p.ID)
+	entity, err := u.Repository.FindByID(input.ID)
 	if err != nil {
 		log.Println("Error on find product: ", err)
 		response.Errors = append(response.Errors, err.Error())
@@ -48,7 +47,7 @@ func (u *CategoryUseCases) Update(p requests.UpdateCategoryRequest) (response mo
 		response.Errors = append(response.Errors, "Product not found")
 		return response, 404
 	}
-	entity.Update(p.Name)
+	entity.Update(input.Name)
 	response.Data = entity
 	err = u.Repository.Update(entity)
 	if err != nil {

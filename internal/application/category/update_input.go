@@ -1,13 +1,13 @@
-package requests
+package category
 
 import "github.com/vitormoschetta/go/internal/domain/models"
 
-type UpdateCategoryRequest struct {
+type UpdateCategoryInput struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-func (c *UpdateCategoryRequest) Validate() (response models.Response) {
+func (c *UpdateCategoryInput) Validate() (response models.Response) {
 	if c.ID == "" {
 		response.Errors = append(response.Errors, "ID is required")
 	}

@@ -4,18 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/vitormoschetta/go/internal/application/requests"
-	"github.com/vitormoschetta/go/internal/application/useCases"
+	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/general"
 )
 
 type CategoryController struct {
-	UseCase    *useCases.CategoryUseCases
+	UseCase    *categoryApplication.CategoryUseCases
 	Repository general.IRepository[category.Category]
 }
 
-func NewCategoryController(repository general.IRepository[category.Category], useCase *useCases.CategoryUseCases) *CategoryController {
+func NewCategoryController(repository general.IRepository[category.Category], useCase *categoryApplication.CategoryUseCases) *CategoryController {
 	return &CategoryController{
 		UseCase:    useCase,
 		Repository: repository,
@@ -51,22 +50,22 @@ func (c *CategoryController) Get(ctx *gin.Context) {
 }
 
 func (c *CategoryController) Post(ctx *gin.Context) {
-	var request requests.CreateCategoryRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input categoryApplication.CreateCategoryInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.Save(request)
+	response, statusCode := c.UseCase.Save(input)
 	ctx.JSON(statusCode, response)
 }
 
 func (c *CategoryController) Put(ctx *gin.Context) {
-	var request requests.UpdateCategoryRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input categoryApplication.UpdateCategoryInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.Update(request)
+	response, statusCode := c.UseCase.Update(input)
 	ctx.JSON(statusCode, response)
 }
 

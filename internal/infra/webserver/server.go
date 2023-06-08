@@ -5,6 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/vitormoschetta/go/docs"
+	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/application/useCases"
 	"github.com/vitormoschetta/go/internal/infra/config"
 	"github.com/vitormoschetta/go/internal/infra/database"
@@ -18,7 +19,7 @@ func Start() {
 	db := database.ConnectDB()
 
 	categoryRepository := repositories.NewCategoryRepository(db)
-	categoryUseCase := useCases.NewCategoryUseCase(categoryRepository)
+	categoryUseCase := categoryApplication.NewCategoryUseCase(categoryRepository)
 	categoryController := controllers.NewCategoryController(categoryRepository, categoryUseCase)
 
 	productRepository := repositories.NewProductRepository(db)
