@@ -3,11 +3,13 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	productApplication "github.com/vitormoschetta/go/internal/application/product"
 	"github.com/vitormoschetta/go/internal/domain/product"
+	"github.com/vitormoschetta/go/internal/infra/webserver/hooks"
 )
 
 type ProductController struct {
@@ -32,21 +34,18 @@ func NewProductController(repository product.IProductRepository, useCase *produc
 // @Success      200  {object}  models.Product
 // @Router       /products [get]
 func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	w.Header().Set("Content-Type", "application/json")
-	items, err := c.Repository.FindAll(ctx)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	client := &http.Client{
+		Transport: &hooks.TraceTransport{
+			Base: http.DefaultTransport,
+		},
 	}
-	responseItemsJSON, err := json.Marshal(items)
+
+	resp, err := client.Get("https://api.example.com")
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		log.Fatal(err)
 	}
-	w.WriteHeader(http.StatusOK)
-	w.Write(responseItemsJSON)
-	ctx.Done()
+	defer resp.Body.Close()
+
 }
 
 func (c *ProductController) Get(w http.ResponseWriter, r *http.Request) {
