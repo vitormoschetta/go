@@ -9,9 +9,9 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - ./internal/infra/database/sqlfiles/01_bootstrap.sql:/docker-entrypoint-initdb.d/01_bootstrap.sql
       - ./internal/infra/database/sqlfiles/02_seeds.sql:/docker-entrypoint-initdb.d/02_seeds.sql
