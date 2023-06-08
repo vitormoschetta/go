@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"database/sql"
+	"encoding/json"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 	productApplication "github.com/vitormoschetta/go/internal/application/product"
 	"github.com/vitormoschetta/go/internal/domain/product"
 )
@@ -29,81 +31,160 @@ func NewProductController(repository product.IProductRepository, useCase *produc
 // @Produce      json
 // @Success      200  {object}  models.Product
 // @Router       /products [get]
-func (c *ProductController) GetAll(ctx *gin.Context) {
+func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 	items, err := c.Repository.FindAll()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 	}
-	ctx.JSON(http.StatusOK, items)
+	responseItemsJSON, err := json.Marshal(items)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseItemsJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) Get(ctx *gin.Context) {
-	id := ctx.Param("id")
+func (c *ProductController) Get(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	id := vars["id"]
 	item, err := c.Repository.FindByID(id)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		if err == sql.ErrNoRows {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte(`{"error": "Product not found"}`))
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 	}
-	if item.ID == "" {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
-		return
+	responseItemsJSON, err := json.Marshal(item)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 	}
-	ctx.JSON(http.StatusOK, item)
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseItemsJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) GetByCategory(ctx *gin.Context) {
-	categoryId := ctx.Param("category_id")
+func (c *ProductController) GetByCategory(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	categoryId := vars["category_id"]
 	items, err := c.Repository.FindByCategory(categoryId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 	}
-	ctx.JSON(http.StatusOK, items)
+	responseItemsJSON, err := json.Marshal(items)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseItemsJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) Post(ctx *gin.Context) {
+func (c *ProductController) Post(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 	var input productApplication.CreateProductInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
 	response, statusCode := c.UseCase.Create(input)
-	ctx.JSON(statusCode, response)
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(statusCode)
+	w.Write(responseJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) Put(ctx *gin.Context) {
+func (c *ProductController) Put(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 	var input productApplication.UpdateProductInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
 	response, statusCode := c.UseCase.Update(input)
-	ctx.JSON(statusCode, response)
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(statusCode)
+	w.Write(responseJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) Delete(ctx *gin.Context) {
-	id := ctx.Param("id")
+func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	id := vars["id"]
 	response, statusCode := c.UseCase.Delete(id)
-	ctx.JSON(statusCode, response)
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(statusCode)
+	w.Write(responseJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) PutPromotion(ctx *gin.Context) {
+func (c *ProductController) PutPromotion(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	w.Header().Set("Content-Type", "application/json")
 	var input productApplication.ApplyPromotionProductInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
 	response, statusCode := c.UseCase.ApplyPromotion(input)
-	ctx.JSON(statusCode, response)
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(statusCode)
+	w.Write(responseJSON)
+	ctx.Done()
 }
 
-func (c *ProductController) PutPromotionbyCategory(ctx *gin.Context) {
+func (c *ProductController) PutPromotionbyCategory(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	var input productApplication.ApplyPromotionProductByCategoryInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
 	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(input)
-	ctx.JSON(statusCode, response)
+	responseJSON, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+	}
+	w.WriteHeader(statusCode)
+	w.Write(responseJSON)
+	ctx.Done()
 }

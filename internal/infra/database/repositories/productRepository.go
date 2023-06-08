@@ -40,12 +40,10 @@ func (r *ProductRepository) FindAll() (products []product.Product, err error) {
 
 func (r *ProductRepository) FindByID(id string) (product product.Product, err error) {
 	row := r.Db.QueryRow("SELECT id, name, price, category_id FROM products WHERE id = ?", id)
-	errData := row.Scan(&product.ID, &product.Name, &product.Price, &product.Category.ID)
-	if errData != nil {
-		if errData == sql.ErrNoRows {
-			return product, nil
-		}
-		log.Print(errData)
+	err = row.Scan(&product.ID, &product.Name, &product.Price, &product.Category.ID)
+	if err != nil {
+		log.Print(err)
+		return
 	}
 	return
 }
