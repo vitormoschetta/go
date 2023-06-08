@@ -9,8 +9,8 @@ import (
 	"github.com/vitormoschetta/go/internal/infra/config"
 )
 
-func ConnectDB() *sql.DB {
-	var cfg = configure()
+func ConnectDB(appConfig config.ApplicationConfig) *sql.DB {
+	var cfg = configure(appConfig)
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		log.Fatal(err)
@@ -23,13 +23,13 @@ func ConnectDB() *sql.DB {
 	return db
 }
 
-func configure() mysql.Config {
+func configure(appConfig config.ApplicationConfig) mysql.Config {
 	var cfg = mysql.Config{
-		User:                 config.Db.User,
-		Passwd:               config.Db.Password,
+		User:                 appConfig.Database.User,
+		Passwd:               appConfig.Database.Password,
 		Net:                  "tcp",
-		Addr:                 fmt.Sprintf("%s:%s", config.Db.Host, config.Db.Port),
-		DBName:               config.Db.Name,
+		Addr:                 fmt.Sprintf("%s:%s", appConfig.Database.Host, appConfig.Database.Port),
+		DBName:               appConfig.Database.Name,
 		AllowNativePasswords: true,
 	}
 	return cfg

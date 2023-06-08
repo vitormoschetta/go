@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${fileDirname}/../cmd/main.go",
             "env": {
-                "PORT": "8080",
+                "APPLICATION_PORT": "8080",
             },
             "args": [],
             "showLog": true,

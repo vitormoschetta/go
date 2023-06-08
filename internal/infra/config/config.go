@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type DbConfig struct {
+type Database struct {
 	User     string
 	Password string
 	Host     string
@@ -15,42 +15,31 @@ type DbConfig struct {
 	Name     string
 }
 
+type ApplicationConfig struct {
+	Port     string
+	Database Database
+}
+
 var (
-	ApiPort string
-	Db      DbConfig
+	Db Database
 )
 
-func Load() {
+func Load() ApplicationConfig {
 	err := godotenv.Load()
 	if err != nil {
 		log.Print("No .env file found")
 	}
 
-	Db = DbConfig{}
-
-	Db.User = os.Getenv("DB_USER")
-	if Db.User == "" {
-		Db.User = "go"
-	}
-	Db.Password = os.Getenv("DB_PASSWORD")
-	if Db.Password == "" {
-		Db.Password = "go"
-	}
-	Db.Host = os.Getenv("DB_HOST")
-	if Db.Host == "" {
-		Db.Host = "localhost"
-	}
-	Db.Port = os.Getenv("DB_PORT")
-	if Db.Port == "" {
-		Db.Port = "3306"
-	}
-	Db.Name = os.Getenv("DB_NAME")
-	if Db.Name == "" {
-		Db.Name = "go"
+	applicationConfig := ApplicationConfig{}
+	applicationConfig.Database.User = os.Getenv("DATABASE_USER")
+	applicationConfig.Database.Password = os.Getenv("DATABASE_PASSWORD")
+	applicationConfig.Database.Host = os.Getenv("DATABASE_HOST")
+	applicationConfig.Database.Port = os.Getenv("DATABASE_PORT")
+	applicationConfig.Database.Name = os.Getenv("DATABASE_NAME")
+	applicationConfig.Port = os.Getenv("APPLICATION_PORT")
+	if applicationConfig.Port == "" {
+		applicationConfig.Port = "8080"
 	}
 
-	ApiPort = os.Getenv("PORT")
-	if ApiPort == "" {
-		ApiPort = "8080"
-	}
+	return applicationConfig
 }

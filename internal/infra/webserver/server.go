@@ -15,8 +15,8 @@ import (
 )
 
 func Start() {
-	config.Load()
-	db := database.ConnectDB()
+	appConfig := config.Load()
+	db := database.ConnectDB(appConfig)
 
 	categoryRepository := repositories.NewCategoryRepository(db)
 	categoryUseCase := categoryApplication.NewCategoryUseCase(categoryRepository)
@@ -48,7 +48,7 @@ func Start() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	err := router.Run(":" + config.ApiPort)
+	err := router.Run(":" + appConfig.Port)
 	if err != nil {
 		panic(err)
 	}
