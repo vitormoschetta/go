@@ -1,39 +1,38 @@
 package mock
 
 import (
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductRepositoryFake struct {
-	Db []models.Product
+	Db []product.Product
 }
 
-func NewProductRepositoryFake() interfaces.IProductRepository {
+func NewProductRepositoryFake() product.IProductRepository {
 	return &ProductRepositoryFake{
-		Db: []models.Product{},
+		Db: []product.Product{},
 	}
 }
 
-func (r *ProductRepositoryFake) FindAll() (products []models.Product, err error) {
+func (r *ProductRepositoryFake) FindAll() (products []product.Product, err error) {
 	return r.Db, nil
 }
 
-func (r *ProductRepositoryFake) FindByID(id string) (product models.Product, err error) {
+func (r *ProductRepositoryFake) FindByID(id string) (product product.Product, err error) {
 	for _, product := range r.Db {
 		if product.ID == id {
 			return product, nil
 		}
 	}
-	return models.Product{}, nil
+	return product, nil
 }
 
-func (r *ProductRepositoryFake) Save(p models.Product) error {
+func (r *ProductRepositoryFake) Save(p product.Product) error {
 	r.Db = append(r.Db, p)
 	return nil
 }
 
-func (r *ProductRepositoryFake) Update(p models.Product) error {
+func (r *ProductRepositoryFake) Update(p product.Product) error {
 	for i, product := range r.Db {
 		if product.ID == p.ID {
 			r.Db[i] = p
@@ -51,7 +50,7 @@ func (r *ProductRepositoryFake) Delete(id string) error {
 	return nil
 }
 
-func (r *ProductRepositoryFake) FindByCategory(categoryID string) (products []models.Product, err error) {
+func (r *ProductRepositoryFake) FindByCategory(categoryID string) (products []product.Product, err error) {
 	for _, product := range r.Db {
 		if product.Category.ID == categoryID {
 			products = append(products, product)

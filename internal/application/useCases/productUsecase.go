@@ -4,16 +4,18 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/application/requests"
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
+	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/domain/general"
 	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductUseCase struct {
-	ProductRepository  interfaces.IProductRepository
-	CategoryRepository interfaces.IRepository[models.Category]
+	ProductRepository  product.IProductRepository
+	CategoryRepository general.IRepository[category.Category]
 }
 
-func NewProductUseCase(pR interfaces.IProductRepository, cR interfaces.IRepository[models.Category]) *ProductUseCase {
+func NewProductUseCase(pR product.IProductRepository, cR general.IRepository[category.Category]) *ProductUseCase {
 	return &ProductUseCase{ProductRepository: pR, CategoryRepository: cR}
 }
 

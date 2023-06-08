@@ -1,39 +1,39 @@
 package mock
 
 import (
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/domain/general"
 )
 
 type CategoryRepositoryFake struct {
-	Db []models.Category
+	Db []category.Category
 }
 
-func NewCategoryRepositoryFake() interfaces.IRepository[models.Category] {
+func NewCategoryRepositoryFake() general.IRepository[category.Category] {
 	return &CategoryRepositoryFake{
-		Db: []models.Category{},
+		Db: []category.Category{},
 	}
 }
 
-func (r *CategoryRepositoryFake) FindAll() (categories []models.Category, err error) {
+func (r *CategoryRepositoryFake) FindAll() (categories []category.Category, err error) {
 	return r.Db, nil
 }
 
-func (r *CategoryRepositoryFake) FindByID(id string) (category models.Category, err error) {
+func (r *CategoryRepositoryFake) FindByID(id string) (category category.Category, err error) {
 	for _, category := range r.Db {
 		if category.ID == id {
 			return category, nil
 		}
 	}
-	return models.Category{}, nil
+	return category, nil
 }
 
-func (r *CategoryRepositoryFake) Save(p models.Category) error {
+func (r *CategoryRepositoryFake) Save(p category.Category) error {
 	r.Db = append(r.Db, p)
 	return nil
 }
 
-func (r *CategoryRepositoryFake) Update(p models.Category) error {
+func (r *CategoryRepositoryFake) Update(p category.Category) error {
 	for i, category := range r.Db {
 		if category.ID == p.ID {
 			r.Db[i] = p

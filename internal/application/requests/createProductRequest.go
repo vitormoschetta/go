@@ -1,7 +1,9 @@
 package requests
 
 import (
+	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type CreateProductRequest struct {
@@ -23,6 +25,6 @@ func (p *CreateProductRequest) Validate() (response models.Response) {
 	return
 }
 
-func (p *CreateProductRequest) ToProductModel(categoryy models.Category) models.Product {
-	return models.NewProduct(p.Name, p.Price, categoryy)
+func (p *CreateProductRequest) ToProductModel(category category.Category) product.Product {
+	return product.NewProduct(p.Name, p.Price, category)
 }

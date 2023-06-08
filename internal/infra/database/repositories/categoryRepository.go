@@ -4,19 +4,19 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/domain/general"
 )
 
 type CategoryRepository struct {
 	Db *sql.DB
 }
 
-func NewCategoryRepository(db *sql.DB) interfaces.IRepository[models.Category] {
+func NewCategoryRepository(db *sql.DB) general.IRepository[category.Category] {
 	return &CategoryRepository{Db: db}
 }
 
-func (r *CategoryRepository) FindAll() (categories []models.Category, err error) {
+func (r *CategoryRepository) FindAll() (categories []category.Category, err error) {
 	rows, err := r.Db.Query("SELECT id, name FROM categories")
 	if err != nil {
 		log.Print(err)
@@ -25,7 +25,7 @@ func (r *CategoryRepository) FindAll() (categories []models.Category, err error)
 	defer rows.Close()
 
 	for rows.Next() {
-		var c models.Category
+		var c category.Category
 		err := rows.Scan(&c.ID, &c.Name)
 		if err != nil {
 			log.Print(err)
@@ -36,7 +36,7 @@ func (r *CategoryRepository) FindAll() (categories []models.Category, err error)
 	return
 }
 
-func (r *CategoryRepository) FindByID(id string) (category models.Category, err error) {
+func (r *CategoryRepository) FindByID(id string) (category category.Category, err error) {
 	row := r.Db.QueryRow("SELECT id, name FROM categories WHERE id = ?", id)
 	err = row.Scan(&category.ID, &category.Name)
 	if err != nil {
@@ -45,7 +45,7 @@ func (r *CategoryRepository) FindByID(id string) (category models.Category, err 
 	return
 }
 
-func (r *CategoryRepository) Save(p models.Category) error {
+func (r *CategoryRepository) Save(p category.Category) error {
 	stmt, err := r.Db.Prepare("INSERT INTO categories (id, name) VALUES (?, ?)")
 	if err != nil {
 		log.Print(err)
@@ -62,7 +62,7 @@ func (r *CategoryRepository) Save(p models.Category) error {
 	return nil
 }
 
-func (r *CategoryRepository) Update(p models.Category) error {
+func (r *CategoryRepository) Update(p category.Category) error {
 	stmt, err := r.Db.Prepare("UPDATE categories SET name = ? WHERE id = ?")
 	if err != nil {
 		log.Print(err)

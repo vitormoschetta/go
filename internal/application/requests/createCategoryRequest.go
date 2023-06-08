@@ -1,6 +1,9 @@
 package requests
 
-import "github.com/vitormoschetta/go/internal/domain/models"
+import (
+	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/domain/models"
+)
 
 type CreateCategoryRequest struct {
 	Name string `json:"name"`
@@ -13,6 +16,6 @@ func (c *CreateCategoryRequest) Validate() (response models.Response) {
 	return
 }
 
-func (c *CreateCategoryRequest) ToCategoryModel() models.Category {
-	return models.NewCategory(c.Name)
+func (c *CreateCategoryRequest) ToCategoryEntity() category.Category {
+	return category.NewCategory(c.Name)
 }

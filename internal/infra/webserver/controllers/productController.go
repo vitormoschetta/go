@@ -6,15 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vitormoschetta/go/internal/application/requests"
 	"github.com/vitormoschetta/go/internal/application/useCases"
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
+	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductController struct {
 	UseCase    *useCases.ProductUseCase
-	Repository interfaces.IProductRepository
+	Repository product.IProductRepository
 }
 
-func NewProductController(repository interfaces.IProductRepository, useCase *useCases.ProductUseCase) *ProductController {
+func NewProductController(repository product.IProductRepository, useCase *useCases.ProductUseCase) *ProductController {
 	return &ProductController{
 		UseCase:    useCase,
 		Repository: repository,

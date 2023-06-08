@@ -4,19 +4,18 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductRepository struct {
 	Db *sql.DB
 }
 
-func NewProductRepository(db *sql.DB) interfaces.IProductRepository {
+func NewProductRepository(db *sql.DB) product.IProductRepository {
 	return &ProductRepository{Db: db}
 }
 
-func (r *ProductRepository) FindAll() (products []models.Product, err error) {
+func (r *ProductRepository) FindAll() (products []product.Product, err error) {
 	query := "SELECT p.id, p.name, p.price, c.id, c.name "
 	query += "FROM products p "
 	query += "INNER JOIN categories c ON p.category_id = c.id"
@@ -28,7 +27,7 @@ func (r *ProductRepository) FindAll() (products []models.Product, err error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var p models.Product
+		var p product.Product
 		err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Category.ID, &p.Category.Name)
 		if err != nil {
 			log.Print(err)
@@ -39,7 +38,7 @@ func (r *ProductRepository) FindAll() (products []models.Product, err error) {
 	return
 }
 
-func (r *ProductRepository) FindByID(id string) (product models.Product, err error) {
+func (r *ProductRepository) FindByID(id string) (product product.Product, err error) {
 	row := r.Db.QueryRow("SELECT id, name, price, category_id FROM products WHERE id = ?", id)
 	err = row.Scan(&product.ID, &product.Name, &product.Price)
 	if err != nil {
@@ -48,7 +47,7 @@ func (r *ProductRepository) FindByID(id string) (product models.Product, err err
 	return
 }
 
-func (r *ProductRepository) FindByCategory(categoryID string) (products []models.Product, err error) {
+func (r *ProductRepository) FindByCategory(categoryID string) (products []product.Product, err error) {
 	rows, err := r.Db.Query("SELECT id, name, price, category_id FROM products WHERE category_id = ?", categoryID)
 	if err != nil {
 		log.Print(err)
@@ -57,7 +56,7 @@ func (r *ProductRepository) FindByCategory(categoryID string) (products []models
 	defer rows.Close()
 
 	for rows.Next() {
-		var p models.Product
+		var p product.Product
 		err := rows.Scan(&p.ID, &p.Name, &p.Price)
 		if err != nil {
 			log.Print(err)
@@ -68,7 +67,7 @@ func (r *ProductRepository) FindByCategory(categoryID string) (products []models
 	return
 }
 
-func (r *ProductRepository) Save(p models.Product) error {
+func (r *ProductRepository) Save(p product.Product) error {
 	stmt, err := r.Db.Prepare("INSERT INTO products (id, name, price, category_id) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Print(err)
@@ -85,7 +84,7 @@ func (r *ProductRepository) Save(p models.Product) error {
 	return nil
 }
 
-func (r *ProductRepository) Update(p models.Product) error {
+func (r *ProductRepository) Update(p product.Product) error {
 	stmt, err := r.Db.Prepare("UPDATE products SET name = ?, price = ?, category_id = ? WHERE id = ?")
 	if err != nil {
 		log.Print(err)

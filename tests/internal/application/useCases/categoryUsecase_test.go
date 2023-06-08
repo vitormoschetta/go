@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vitormoschetta/go/internal/application/requests"
 	"github.com/vitormoschetta/go/internal/application/useCases"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/tests/mock"
 )
 
@@ -53,14 +53,14 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	}
 	// Act
 	request2 := requests.UpdateCategoryRequest{
-		ID:   response.Data.(models.Category).ID,
+		ID:   response.Data.(category.Category).ID,
 		Name: "Category 2",
 	}
 	response, statusCode = useCase.Update(request2)
 	// Assert
 	assert.Equal(t, 200, statusCode)
 	assert.Nil(t, response.Errors)
-	assert.Equal(t, "Category 2", response.Data.(models.Category).Name)
+	assert.Equal(t, "Category 2", response.Data.(category.Category).Name)
 }
 
 func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {

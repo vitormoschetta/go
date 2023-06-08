@@ -6,16 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vitormoschetta/go/internal/application/requests"
 	"github.com/vitormoschetta/go/internal/application/useCases"
-	"github.com/vitormoschetta/go/internal/domain/interfaces"
-	"github.com/vitormoschetta/go/internal/domain/models"
+	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/domain/general"
 )
 
 type CategoryController struct {
 	UseCase    *useCases.CategoryUseCases
-	Repository interfaces.IRepository[models.Category]
+	Repository general.IRepository[category.Category]
 }
 
-func NewCategoryController(repository interfaces.IRepository[models.Category], useCase *useCases.CategoryUseCases) *CategoryController {
+func NewCategoryController(repository general.IRepository[category.Category], useCase *useCases.CategoryUseCases) *CategoryController {
 	return &CategoryController{
 		UseCase:    useCase,
 		Repository: repository,

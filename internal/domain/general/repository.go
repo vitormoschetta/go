@@ -1,4 +1,4 @@
-package interfaces
+package general
 
 type IRepository[T any] interface {
 	Save(T) error
