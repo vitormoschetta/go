@@ -4,16 +4,14 @@ import (
 	"errors"
 
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/domain/common"
 )
 
-var SaveError bool
-
 type CategoryRepositoryFake struct {
-	Db []category.Category
+	Db        []category.Category
+	SaveError bool
 }
 
-func NewCategoryRepositoryFake() common.IRepository[category.Category] {
+func NewCategoryRepositoryFake() *CategoryRepositoryFake {
 	return &CategoryRepositoryFake{
 		Db: []category.Category{},
 	}
@@ -33,7 +31,7 @@ func (r *CategoryRepositoryFake) FindByID(id string) (category category.Category
 }
 
 func (r *CategoryRepositoryFake) Save(p category.Category) error {
-	if SaveError {
+	if r.SaveError {
 		return errors.New("Error on save category")
 	}
 	r.Db = append(r.Db, p)
