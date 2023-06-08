@@ -1,6 +1,6 @@
 package product
 
-import "github.com/vitormoschetta/go/internal/domain/models"
+import "github.com/vitormoschetta/go/internal/application/general"
 
 type UpdateProductInput struct {
 	ID         string  `json:"id"`
@@ -9,15 +9,15 @@ type UpdateProductInput struct {
 	CategoryId string  `json:"category_id"`
 }
 
-func (p *UpdateProductInput) Validate() (response models.Response) {
+func (p *UpdateProductInput) Validate() (output general.Output) {
 	if p.ID == "" {
-		response.Errors = append(response.Errors, "ID is required")
+		output.Errors = append(output.Errors, "ID is required")
 	}
 	if p.Name == "" {
-		response.Errors = append(response.Errors, "Name is required")
+		output.Errors = append(output.Errors, "Name is required")
 	}
 	if p.Price <= 0 {
-		response.Errors = append(response.Errors, "Price is less than or equal to zero")
+		output.Errors = append(output.Errors, "Price is less than or equal to zero")
 	}
 	return
 }
