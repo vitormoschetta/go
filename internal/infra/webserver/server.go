@@ -13,7 +13,7 @@ import (
 	"github.com/vitormoschetta/go/internal/infra/webserver/routers"
 )
 
-func StartServer() {
+func Start() {
 	config.Load()
 	db := database.ConnectDB()
 
@@ -47,5 +47,8 @@ func StartServer() {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	router.Run(":" + config.ApiPort)
+	err := router.Run(":" + config.ApiPort)
+	if err != nil {
+		panic(err)
+	}
 }

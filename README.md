@@ -1,25 +1,39 @@
 # Get Started
 
-#### Docker Compose
+#### Create Database
 
 ```bash
 docker-compose up -d
 ```
 
-#### Instalar dependências
+#### Install dependencies
 
 ```bash
 go mod tidy
 ```
 
-#### Executar o projeto
+#### Run Project
 
 ```bash
 go run cmd/main.go
 ```
 
-#### Executar Testes
+#### Run Tests
 
 ```bash 
 go test ./...
 ```
+
+Test coverage:
+```bash
+go test ./... -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
+#### Run Linter
+
+Check for linting errors
+```bash
+golangci-lint run
+```
+
