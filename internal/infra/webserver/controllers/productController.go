@@ -34,7 +34,7 @@ func NewProductController(repository product.IProductRepository, useCase *produc
 func (c *ProductController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
-	items, err := c.Repository.FindAll()
+	items, err := c.Repository.FindAll(ctx)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
@@ -54,7 +54,7 @@ func (c *ProductController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id := vars["id"]
-	item, err := c.Repository.FindByID(id)
+	item, err := c.Repository.FindByID(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			w.WriteHeader(http.StatusNotFound)
@@ -79,7 +79,7 @@ func (c *ProductController) GetByCategory(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	categoryId := vars["category_id"]
-	items, err := c.Repository.FindByCategory(categoryId)
+	items, err := c.Repository.FindByCategory(ctx, categoryId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
@@ -103,7 +103,7 @@ func (c *ProductController) Post(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.Create(input)
+	response, statusCode := c.UseCase.Create(ctx, input)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -123,7 +123,7 @@ func (c *ProductController) Put(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.Update(input)
+	response, statusCode := c.UseCase.Update(ctx, input)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -139,7 +139,7 @@ func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id := vars["id"]
-	response, statusCode := c.UseCase.Delete(id)
+	response, statusCode := c.UseCase.Delete(ctx, id)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -159,7 +159,7 @@ func (c *ProductController) PutPromotion(w http.ResponseWriter, r *http.Request)
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.ApplyPromotion(input)
+	response, statusCode := c.UseCase.ApplyPromotion(ctx, input)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -178,7 +178,7 @@ func (c *ProductController) PutPromotionbyCategory(w http.ResponseWriter, r *htt
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(input)
+	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(ctx, input)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

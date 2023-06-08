@@ -1,6 +1,7 @@
 package category
 
 import (
+	"context"
 	"log"
 
 	applicationCommon "github.com/vitormoschetta/go/internal/application/common"
@@ -16,14 +17,14 @@ func NewCategoryUseCase(pR common.IRepository[category.Category]) *CategoryUseCa
 	return &CategoryUseCases{Repository: pR}
 }
 
-func (u *CategoryUseCases) Create(input CreateCategoryInput) (output applicationCommon.Output, statusCode int) {
+func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
 	}
 	entity := input.ToCategoryEntity()
 	output.Data = entity
-	err := u.Repository.Save(entity)
+	err := u.Repository.Save(ctx, entity)
 	if err != nil {
 		log.Println("Error on save product: ", err)
 		output.Errors = append(output.Errors, err.Error())
@@ -32,12 +33,12 @@ func (u *CategoryUseCases) Create(input CreateCategoryInput) (output application
 	return output, 201
 }
 
-func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output applicationCommon.Output, statusCode int) {
+func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput) (output applicationCommon.Output, statusCode int) {
 	output = input.Validate()
 	if len(output.Errors) > 0 {
 		return output, 400
 	}
-	entity, err := u.Repository.FindByID(input.ID)
+	entity, err := u.Repository.FindByID(ctx, input.ID)
 	if err != nil {
 		log.Println("Error on find product: ", err)
 		output.Errors = append(output.Errors, err.Error())
@@ -49,7 +50,7 @@ func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output application
 	}
 	entity.Update(input.Name)
 	output.Data = entity
-	err = u.Repository.Update(entity)
+	err = u.Repository.Update(ctx, entity)
 	if err != nil {
 		log.Println("Error on update product: ", err)
 		output.Errors = append(output.Errors, err.Error())
@@ -58,8 +59,8 @@ func (u *CategoryUseCases) Update(input UpdateCategoryInput) (output application
 	return output, 200
 }
 
-func (u *CategoryUseCases) Delete(id string) (output applicationCommon.Output, statusCode int) {
-	entity, err := u.Repository.FindByID(id)
+func (u *CategoryUseCases) Delete(ctx context.Context, id string) (output applicationCommon.Output, statusCode int) {
+	entity, err := u.Repository.FindByID(ctx, id)
 	if err != nil {
 		log.Println("Error on find product: ", err)
 		output.Errors = append(output.Errors, err.Error())
@@ -69,7 +70,7 @@ func (u *CategoryUseCases) Delete(id string) (output applicationCommon.Output, s
 		output.Errors = append(output.Errors, "Product not found")
 		return output, 404
 	}
-	err = u.Repository.Delete(entity.ID)
+	err = u.Repository.Delete(ctx, entity.ID)
 	if err != nil {
 		log.Println("Error on delete product: ", err)
 		output.Errors = append(output.Errors, err.Error())

@@ -34,7 +34,7 @@ func NewCategoryController(repository common.IRepository[category.Category], use
 func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	w.Header().Set("Content-Type", "application/json")
-	items, err := c.Repository.FindAll()
+	items, err := c.Repository.FindAll(ctx)
 	if err != nil {
 
 		w.WriteHeader(http.StatusInternalServerError)
@@ -55,7 +55,7 @@ func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id := vars["id"]
-	item, err := c.Repository.FindByID(id)
+	item, err := c.Repository.FindByID(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
@@ -79,7 +79,7 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.Create(input)
+	response, statusCode := c.UseCase.Create(ctx, input)
 	w.WriteHeader(statusCode)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
@@ -99,7 +99,7 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
 		return
 	}
-	response, statusCode := c.UseCase.Update(input)
+	response, statusCode := c.UseCase.Update(ctx, input)
 	w.WriteHeader(statusCode)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
@@ -115,7 +115,7 @@ func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	id := vars["id"]
-	response, statusCode := c.UseCase.Delete(id)
+	response, statusCode := c.UseCase.Delete(ctx, id)
 	w.WriteHeader(statusCode)
 	responseJSON, err := json.Marshal(response)
 	if err != nil {
