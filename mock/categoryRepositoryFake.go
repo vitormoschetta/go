@@ -1,9 +1,13 @@
 package mock
 
 import (
+	"errors"
+
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
 )
+
+var SaveError bool
 
 type CategoryRepositoryFake struct {
 	Db []category.Category
@@ -29,6 +33,9 @@ func (r *CategoryRepositoryFake) FindByID(id string) (category category.Category
 }
 
 func (r *CategoryRepositoryFake) Save(p category.Category) error {
+	if SaveError {
+		return errors.New("Error on save category")
+	}
 	r.Db = append(r.Db, p)
 	return nil
 }

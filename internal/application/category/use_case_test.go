@@ -38,22 +38,6 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 	assert.Equal(t, 1, len(response.Errors))
 }
 
-// func Test_With_Category_Add_With_Database_Error(t *testing.T) {
-// 	// Arrange
-// 	repository := mock.NewCategoryRepositoryFake()
-// 	mock.SaveError = true
-// 	useCase := NewCategoryUseCase(repository)
-// 	request := CreateCategoryInput{
-// 		Name: "Category 1",
-// 	}
-// 	// Act
-// 	response, statusCode := useCase.Create(request)
-// 	// Assert
-// 	assert.Equal(t, 500, statusCode)
-// 	assert.NotNil(t, response.Errors)
-// 	assert.Equal(t, 1, len(response.Errors))
-// }
-
 func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	// Arrange
 	repository := mock.NewCategoryRepositoryFake()
@@ -142,6 +126,22 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	response, statusCode = useCase.Update(request2)
 	// Assert
 	assert.Equal(t, 400, statusCode)
+	assert.NotNil(t, response.Errors)
+	assert.Equal(t, 1, len(response.Errors))
+}
+
+func Test_With_Category_Add_With_Database_Error(t *testing.T) {
+	// Arrange
+	repository := mock.NewCategoryRepositoryFake()
+	mock.SaveError = true
+	useCase := NewCategoryUseCase(repository)
+	request := CreateCategoryInput{
+		Name: "Category 1",
+	}
+	// Act
+	response, statusCode := useCase.Create(request)
+	// Assert
+	assert.Equal(t, 500, statusCode)
 	assert.NotNil(t, response.Errors)
 	assert.Equal(t, 1, len(response.Errors))
 }
