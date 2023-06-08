@@ -1,17 +1,15 @@
-package requests
+package product
 
-import (
-	"github.com/vitormoschetta/go/internal/domain/models"
-)
+import "github.com/vitormoschetta/go/internal/domain/models"
 
-type UpdateProductRequest struct {
+type UpdateProductInput struct {
 	ID         string  `json:"id"`
 	Name       string  `json:"name"`
 	Price      float64 `json:"price"`
 	CategoryId string  `json:"category_id"`
 }
 
-func (p *UpdateProductRequest) Validate() (response models.Response) {
+func (p *UpdateProductInput) Validate() (response models.Response) {
 	if p.ID == "" {
 		response.Errors = append(response.Errors, "ID is required")
 	}

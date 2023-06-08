@@ -1,13 +1,13 @@
-package requests
+package product
 
 import "github.com/vitormoschetta/go/internal/domain/models"
 
-type ApplyPromotionProductRequest struct {
+type ApplyPromotionProductInput struct {
 	ProductId  string  `json:"id" binding:"required"`
 	Percentage float64 `json:"percentage" binding:"required"`
 }
 
-func (p *ApplyPromotionProductRequest) Validate() (response models.Response) {
+func (p *ApplyPromotionProductInput) Validate() (response models.Response) {
 	if p.ProductId == "" {
 		response.Errors = append(response.Errors, "Product is required")
 	}

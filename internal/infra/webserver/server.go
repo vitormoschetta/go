@@ -6,7 +6,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/vitormoschetta/go/docs"
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
-	"github.com/vitormoschetta/go/internal/application/useCases"
+	productApplication "github.com/vitormoschetta/go/internal/application/product"
 	"github.com/vitormoschetta/go/internal/infra/config"
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
@@ -23,7 +23,7 @@ func Start() {
 	categoryController := controllers.NewCategoryController(categoryRepository, categoryUseCase)
 
 	productRepository := repositories.NewProductRepository(db)
-	productUseCase := useCases.NewProductUseCase(productRepository, categoryRepository)
+	productUseCase := productApplication.NewProductUseCase(productRepository, categoryRepository)
 	productController := controllers.NewProductController(productRepository, productUseCase)
 
 	router := gin.Default()

@@ -4,17 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/vitormoschetta/go/internal/application/requests"
-	"github.com/vitormoschetta/go/internal/application/useCases"
+	productApplication "github.com/vitormoschetta/go/internal/application/product"
 	"github.com/vitormoschetta/go/internal/domain/product"
 )
 
 type ProductController struct {
-	UseCase    *useCases.ProductUseCase
+	UseCase    *productApplication.ProductUseCase
 	Repository product.IProductRepository
 }
 
-func NewProductController(repository product.IProductRepository, useCase *useCases.ProductUseCase) *ProductController {
+func NewProductController(repository product.IProductRepository, useCase *productApplication.ProductUseCase) *ProductController {
 	return &ProductController{
 		UseCase:    useCase,
 		Repository: repository,
@@ -60,22 +59,22 @@ func (c *ProductController) GetByCategory(ctx *gin.Context) {
 }
 
 func (c *ProductController) Post(ctx *gin.Context) {
-	var request requests.CreateProductRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input productApplication.CreateProductInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.Save(request)
+	response, statusCode := c.UseCase.Save(input)
 	ctx.JSON(statusCode, response)
 }
 
 func (c *ProductController) Put(ctx *gin.Context) {
-	var request requests.UpdateProductRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input productApplication.UpdateProductInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.Update(request)
+	response, statusCode := c.UseCase.Update(input)
 	ctx.JSON(statusCode, response)
 }
 
@@ -86,21 +85,21 @@ func (c *ProductController) Delete(ctx *gin.Context) {
 }
 
 func (c *ProductController) PutPromotion(ctx *gin.Context) {
-	var request requests.ApplyPromotionProductRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input productApplication.ApplyPromotionProductInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.ApplyPromotion(request)
+	response, statusCode := c.UseCase.ApplyPromotion(input)
 	ctx.JSON(statusCode, response)
 }
 
 func (c *ProductController) PutPromotionbyCategory(ctx *gin.Context) {
-	var request requests.ApplyPromotionProductByCategoryRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	var input productApplication.ApplyPromotionProductByCategoryInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(request)
+	response, statusCode := c.UseCase.ApplyPromotionOnProductsByCategory(input)
 	ctx.JSON(statusCode, response)
 }
