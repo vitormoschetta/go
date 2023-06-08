@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/vitormoschetta/go/config"
+	"github.com/vitormoschetta/go/internal/infra/config"
 )
 
 func ConnectDB() *sql.DB {
