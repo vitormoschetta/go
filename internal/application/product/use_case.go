@@ -18,7 +18,7 @@ func NewProductUseCase(pR product.IProductRepository, cR general.IRepository[cat
 	return &ProductUseCase{ProductRepository: pR, CategoryRepository: cR}
 }
 
-func (u *ProductUseCase) Save(input CreateProductInput) (response models.Response, statusCode int) {
+func (u *ProductUseCase) Create(input CreateProductInput) (response models.Response, statusCode int) {
 	response = input.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400
@@ -59,7 +59,7 @@ func (u *ProductUseCase) Update(input UpdateProductInput) (response models.Respo
 		response.Errors = append(response.Errors, "Product not found")
 		return response, 404
 	}
-	category, err := u.CategoryRepository.FindByID(input.CategoryId)
+	category, err := u.CategoryRepository.FindByID(product.Category.ID)
 	if err != nil {
 		log.Println("Error on find category: ", err)
 		response.Errors = append(response.Errors, err.Error())

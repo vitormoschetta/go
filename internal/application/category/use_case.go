@@ -16,7 +16,7 @@ func NewCategoryUseCase(pR general.IRepository[category.Category]) *CategoryUseC
 	return &CategoryUseCases{Repository: pR}
 }
 
-func (u *CategoryUseCases) Save(input CreateCategoryInput) (response models.Response, statusCode int) {
+func (u *CategoryUseCases) Create(input CreateCategoryInput) (response models.Response, statusCode int) {
 	response = input.Validate()
 	if len(response.Errors) > 0 {
 		return response, 400

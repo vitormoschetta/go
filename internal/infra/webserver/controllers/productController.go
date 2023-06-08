@@ -64,7 +64,7 @@ func (c *ProductController) Post(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	response, statusCode := c.UseCase.Save(input)
+	response, statusCode := c.UseCase.Create(input)
 	ctx.JSON(statusCode, response)
 }
 

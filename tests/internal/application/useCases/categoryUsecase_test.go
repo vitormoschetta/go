@@ -18,7 +18,7 @@ func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 		Name: "Category 1",
 	}
 	// Act
-	response, statusCode := useCase.Save(request)
+	response, statusCode := useCase.Create(request)
 	// Assert
 	assert.Equal(t, 201, statusCode)
 	assert.Nil(t, response.Errors)
@@ -32,7 +32,7 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 		Name: "",
 	}
 	// Act
-	response, statusCode := useCase.Save(request)
+	response, statusCode := useCase.Create(request)
 	// Assert
 	assert.Equal(t, 400, statusCode)
 	assert.NotNil(t, response.Errors)
@@ -46,7 +46,7 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
-	response, statusCode := useCase.Save(request)
+	response, statusCode := useCase.Create(request)
 	if statusCode != 201 {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
@@ -69,7 +69,7 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
-	response, statusCode := useCase.Save(request)
+	response, statusCode := useCase.Create(request)
 	if statusCode != 201 {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
@@ -92,7 +92,7 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	request := categoryApplication.CreateCategoryInput{
 		Name: "Category 1",
 	}
-	response, statusCode := useCase.Save(request)
+	response, statusCode := useCase.Create(request)
 	if statusCode != 201 {
 		t.Errorf("Expected status code 201, got %v", statusCode)
 	}
