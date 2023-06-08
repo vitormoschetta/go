@@ -12,6 +12,7 @@ import (
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
 	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
+	"github.com/vitormoschetta/go/internal/infra/webserver/middlewares"
 )
 
 func Start() {
@@ -27,6 +28,8 @@ func Start() {
 	productController := controllers.NewProductController(productRepository, productUseCase)
 
 	router := mux.NewRouter()
+	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.LoggingMiddleware)
 
 	router.HandleFunc("/api/v1/categories", categoryController.GetAll).Methods("GET")
 	router.HandleFunc("/api/v1/categories", categoryController.Post).Methods("POST")
@@ -41,20 +44,6 @@ func Start() {
 	router.HandleFunc("/api/v1/products/{id}", productController.Delete).Methods("DELETE")
 	router.HandleFunc("/api/v1/promotion", productController.PutPromotion).Methods("PUT")
 	router.HandleFunc("/api/v1/promotion_by_category", productController.PutPromotionbyCategory).Methods("PUT")
-
-	// http.HandleFunc("/api/v1/categories", categoryController.GetAll)
-	// http.HandleFunc("/api/v1/categories", categoryController.Post)
-	// http.HandleFunc("/api/v1/categories/:id", categoryController.Get)
-	// http.HandleFunc("/api/v1/categories/:id", categoryController.Put)
-	// http.HandleFunc("/api/v1/categories/:id", categoryController.Delete)
-
-	// http.HandleFunc("/api/v1/products", productController.GetAll)
-	// http.HandleFunc("/api/v1/products", productController.Post)
-	// http.HandleFunc("/api/v1/products/:id", productController.Get)
-	// http.HandleFunc("/api/v1/products/:id", productController.Put)
-	// http.HandleFunc("/api/v1/products/:id", productController.Delete)
-	// http.HandleFunc("/api/v1/promotion", productController.PutPromotion)
-	// http.HandleFunc("/api/v1/promotion_by_category", productController.PutPromotionbyCategory)
 
 	port := appConfig.Port
 	if port == "" {
