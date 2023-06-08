@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -12,9 +13,9 @@ func TracingMiddleware(next http.Handler) http.Handler {
 		traceID := r.Header.Get("X-Trace-ID")
 		if traceID == "" {
 			traceID = generateTraceID()
-			r.Header.Set("X-Trace-ID", traceID)
 		}
-		next.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), "X-Trace-ID", traceID)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
