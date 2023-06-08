@@ -13,4 +13,5 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./bootstrap.sql:/docker-entrypoint-initdb.d/bootstrap.sql
+      - ./internal/infra/database/sqlfiles/01_bootstrap.sql:/docker-entrypoint-initdb.d/01_bootstrap.sql
+      - ./internal/infra/database/sqlfiles/02_seeds.sql:/docker-entrypoint-initdb.d/02_seeds.sql
