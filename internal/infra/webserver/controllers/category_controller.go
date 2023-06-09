@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
+	"github.com/vitormoschetta/go/internal/share/utils"
 )
 
 type CategoryController struct {
@@ -35,18 +37,20 @@ func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	items, err := c.Repository.FindAll(ctx)
 	if err != nil {
-
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
 	responseItemsJSON, err := json.Marshal(items)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(responseItemsJSON)
-	ctx.Done()
 }
 
 func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
@@ -56,16 +60,25 @@ func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
 	item, err := c.Repository.FindByID(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
+	}
+	if item.ID == "" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Not found"))
+		log.Print(utils.BuildLogger(ctx, "Not found") + " - " + utils.GetCallingPackage())
+		return
 	}
 	responseItemJSON, err := json.Marshal(item)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(responseItemJSON)
-	ctx.Done()
 }
 
 func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
@@ -73,18 +86,20 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 	var input categoryApplication.CreateCategoryInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"errors": ["` + err.Error() + `"]}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	response, statusCode := c.UseCase.Create(ctx, input)
-	w.WriteHeader(statusCode)
-	responseJSON, err := json.Marshal(response)
+	output := c.UseCase.Create(ctx, input)
+	outputJSON, err := json.Marshal(output)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
-	w.Write(responseJSON)
-	ctx.Done()
+	w.WriteHeader(output.Code)
+	w.Write(outputJSON)
 }
 
 func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
@@ -92,31 +107,34 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 	var input categoryApplication.UpdateCategoryInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	response, statusCode := c.UseCase.Update(ctx, input)
-	w.WriteHeader(statusCode)
-	responseJSON, err := json.Marshal(response)
+	output := c.UseCase.Update(ctx, input)
+	outputJSON, err := json.Marshal(output)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
-	w.Write(responseJSON)
-	ctx.Done()
+	w.WriteHeader(output.Code)
+	w.Write(outputJSON)
 }
 
 func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
 	id := vars["id"]
-	response, statusCode := c.UseCase.Delete(ctx, id)
-	w.WriteHeader(statusCode)
-	responseJSON, err := json.Marshal(response)
+	output := c.UseCase.Delete(ctx, id)
+	outputJSON, err := json.Marshal(output)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"error": "` + err.Error() + `"}`))
+		w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return
 	}
-	w.Write(responseJSON)
-	ctx.Done()
+	w.WriteHeader(output.Code)
+	w.Write(outputJSON)
 }

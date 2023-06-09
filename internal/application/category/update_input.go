@@ -1,18 +1,16 @@
 package category
 
-import "github.com/vitormoschetta/go/internal/application/common"
-
 type UpdateCategoryInput struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-func (c *UpdateCategoryInput) Validate() (output common.Output) {
+func (c *UpdateCategoryInput) Validate() (errors []string) {
 	if c.ID == "" {
-		output.Errors = append(output.Errors, "ID is required")
+		errors = append(errors, "ID is required")
 	}
 	if c.Name == "" {
-		output.Errors = append(output.Errors, "Name is required")
+		errors = append(errors, "Name is required")
 	}
 	return
 }

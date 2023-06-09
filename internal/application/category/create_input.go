@@ -1,7 +1,6 @@
 package category
 
 import (
-	"github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
 )
 
@@ -9,9 +8,9 @@ type CreateCategoryInput struct {
 	Name string `json:"name"`
 }
 
-func (c *CreateCategoryInput) Validate() (output common.Output) {
+func (c *CreateCategoryInput) Validate() (errors []string) {
 	if c.Name == "" {
-		output.Errors = append(output.Errors, "Name is required")
+		errors = append(errors, "Name is required")
 	}
 	return
 }

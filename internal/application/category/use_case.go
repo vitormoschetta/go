@@ -7,6 +7,7 @@ import (
 	applicationCommon "github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
+	"github.com/vitormoschetta/go/internal/share/utils"
 )
 
 type CategoryUseCases struct {
@@ -17,64 +18,82 @@ func NewCategoryUseCase(pR common.IRepository[category.Category]) *CategoryUseCa
 	return &CategoryUseCases{Repository: pR}
 }
 
-func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput) (output applicationCommon.Output, statusCode int) {
-	output = input.Validate()
+func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput) applicationCommon.Output {
+	output := applicationCommon.NewOutput(ctx)
+	output.Errors = input.Validate()
 	if len(output.Errors) > 0 {
-		return output, 400
+		output.Code = 400
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	entity := input.ToCategoryEntity()
-	output.Data = entity
 	err := u.Repository.Save(ctx, entity)
 	if err != nil {
-		log.Println("Error on save product: ", err)
-		output.Errors = append(output.Errors, err.Error())
-		return output, 500
+		output.Code = 500
+		output.Errors = append(output.Errors, "Internal error")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
-	return output, 201
+	output.Code = 201
+	output.Data = entity
+	return output
 }
 
-func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput) (output applicationCommon.Output, statusCode int) {
-	output = input.Validate()
+func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput) applicationCommon.Output {
+	output := applicationCommon.NewOutput(ctx)
+	output.Errors = input.Validate()
 	if len(output.Errors) > 0 {
-		return output, 400
+		output.Code = 400
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	entity, err := u.Repository.FindByID(ctx, input.ID)
 	if err != nil {
-		log.Println("Error on find product: ", err)
-		output.Errors = append(output.Errors, err.Error())
-		return output, 500
+		output.Code = 500
+		output.Errors = append(output.Errors, "Internal error")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	if entity.ID == "" {
-		output.Errors = append(output.Errors, "Product not found")
-		return output, 404
+		output.Code = 404
+		output.Errors = append(output.Errors, "Category not found")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	entity.Update(input.Name)
-	output.Data = entity
 	err = u.Repository.Update(ctx, entity)
 	if err != nil {
-		log.Println("Error on update product: ", err)
-		output.Errors = append(output.Errors, err.Error())
-		return output, 500
+		output.Code = 500
+		output.Errors = append(output.Errors, "Internal error")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
-	return output, 200
+	output.Data = entity
+	return output
 }
 
-func (u *CategoryUseCases) Delete(ctx context.Context, id string) (output applicationCommon.Output, statusCode int) {
+func (u *CategoryUseCases) Delete(ctx context.Context, id string) applicationCommon.Output {
+	output := applicationCommon.NewOutput(ctx)
 	entity, err := u.Repository.FindByID(ctx, id)
 	if err != nil {
-		log.Println("Error on find product: ", err)
-		output.Errors = append(output.Errors, err.Error())
-		return output, 500
+		output.Code = 500
+		output.Errors = append(output.Errors, "Internal error")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	if entity.ID == "" {
-		output.Errors = append(output.Errors, "Product not found")
-		return output, 404
+		output.Code = 404
+		output.Errors = append(output.Errors, "Category not found")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
 	err = u.Repository.Delete(ctx, entity.ID)
 	if err != nil {
-		log.Println("Error on delete product: ", err)
-		output.Errors = append(output.Errors, err.Error())
-		return output, 500
+		output.Code = 500
+		output.Errors = append(output.Errors, "Internal error")
+		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+		return output
 	}
-	return output, 200
+	output.Data = entity
+	return output
 }

@@ -3,8 +3,10 @@ package mock
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/internal/share/utils"
 )
 
 type CategoryRepositoryFake struct {
@@ -33,7 +35,9 @@ func (r *CategoryRepositoryFake) FindByID(ctx context.Context, id string) (categ
 
 func (r *CategoryRepositoryFake) Save(ctx context.Context, p category.Category) error {
 	if r.SaveError {
-		return errors.New("Error on save category")
+		err := errors.New("Error on save category")
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		return err
 	}
 	r.Db = append(r.Db, p)
 	return nil
