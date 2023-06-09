@@ -3,7 +3,7 @@ package hooks
 import (
 	"net/http"
 
-	"github.com/vitormoschetta/go/internal/infra/webserver/middlewares"
+	"github.com/vitormoschetta/go/internal/share/middlewares"
 )
 
 type TraceTransport struct {

@@ -42,6 +42,7 @@ func (suite *ProductControllerTest) TestGetAll() {
 	}
 	recorder := httptest.NewRecorder()
 	router := mux.NewRouter()
+	router.Use(middlewares.TracingMiddleware)
 	router.HandleFunc("/", suite.productController.GetAll).Methods("GET")
 
 	// Act
@@ -66,6 +67,7 @@ func (suite *ProductControllerTest) TestGet() {
 	}
 	recorder := httptest.NewRecorder()
 	router := mux.NewRouter()
+	router.Use(middlewares.TracingMiddleware)
 	router.HandleFunc("/{id}", suite.productController.Get).Methods("GET")
 
 	// Act
