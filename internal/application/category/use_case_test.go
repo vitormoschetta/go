@@ -14,7 +14,7 @@ import (
 func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{
@@ -30,7 +30,7 @@ func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{
@@ -47,7 +47,7 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 func Test_With_Category_Add_With_Database_Error(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	repository.SaveError = true
 	useCase := NewCategoryUseCase(repository)
@@ -65,7 +65,7 @@ func Test_With_Category_Add_With_Database_Error(t *testing.T) {
 func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{
@@ -90,7 +90,7 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{
@@ -115,7 +115,7 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{
@@ -140,7 +140,7 @@ func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
 func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	// Arrange
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, middlewares.CorrelationIDHeader, uuid.New().String())
+	ctx = context.WithValue(ctx, middlewares.CorrelationKey, uuid.New().String())
 	repository := mock.NewCategoryRepositoryFake()
 	useCase := NewCategoryUseCase(repository)
 	input := CreateCategoryInput{

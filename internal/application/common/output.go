@@ -18,7 +18,7 @@ func NewOutput(ctx context.Context) Output {
 	return Output{
 		Code:          200,
 		Errors:        []string{},
-		CorrelationID: ctx.Value(middlewares.CorrelationIDHeader).(string),
+		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
 		Data:          nil,
 	}
 }

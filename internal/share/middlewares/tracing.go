@@ -11,7 +11,10 @@ import (
 
 const (
 	CorrelationIDHeader = "X-Correlation-ID"
+	CorrelationKey      = ContextKey(CorrelationIDHeader)
 )
+
+type ContextKey string
 
 func TracingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +23,7 @@ func TracingMiddleware(next http.Handler) http.Handler {
 			traceID = generateTraceID()
 			log.Println("New trace ID generated:", traceID)
 		}
-		ctx := context.WithValue(r.Context(), CorrelationIDHeader, traceID)
+		ctx := context.WithValue(r.Context(), CorrelationKey, traceID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

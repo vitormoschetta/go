@@ -32,8 +32,7 @@ go tool cover -html=coverage.out
 
 #### Run Linter
 
-Check for linting errors
+Check for linting errors (code style, code smells, etc.)
 ```bash
 golangci-lint run
 ```
-

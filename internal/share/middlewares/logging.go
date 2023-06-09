@@ -9,7 +9,7 @@ import (
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		timeStart := time.Now()
-		traceID := r.Context().Value(CorrelationIDHeader).(string)
+		traceID := r.Context().Value(CorrelationKey).(string)
 		log.Printf("%s Método: %s | Rota: %s\n", traceID, r.Method, r.URL.Path)
 		next.ServeHTTP(w, r)
 		timeElapsed := time.Since(timeStart)
