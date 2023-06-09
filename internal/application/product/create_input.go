@@ -1,7 +1,6 @@
 package product
 
 import (
-	"github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/product"
 )
@@ -12,15 +11,15 @@ type CreateProductInput struct {
 	CategoryId string  `json:"category_id"`
 }
 
-func (p *CreateProductInput) Validate() (output common.Output) {
+func (p *CreateProductInput) Validate() (errors []string) {
 	if p.Name == "" {
-		output.Errors = append(output.Errors, "Name is required")
+		errors = append(errors, "Name is required")
 	}
 	if p.Price <= 0 {
-		output.Errors = append(output.Errors, "Price is less than or equal to zero")
+		errors = append(errors, "Price is less than or equal to zero")
 	}
 	if p.CategoryId == "" {
-		output.Errors = append(output.Errors, "Category is required")
+		errors = append(errors, "Category is required")
 	}
 	return
 }

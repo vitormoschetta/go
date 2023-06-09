@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/product"
+	"github.com/vitormoschetta/go/internal/share/utils"
 )
 
 type ProductRepository struct {
@@ -22,7 +23,7 @@ func (r *ProductRepository) FindAll(ctx context.Context) (products []product.Pro
 	query += "INNER JOIN categories c ON p.category_id = c.id"
 	rows, err := r.Db.Query(query)
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
 	defer rows.Close()
@@ -31,7 +32,7 @@ func (r *ProductRepository) FindAll(ctx context.Context) (products []product.Pro
 		var p product.Product
 		err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Category.ID, &p.Category.Name)
 		if err != nil {
-			log.Print(ctx, err)
+			log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 			continue
 		}
 		products = append(products, p)
@@ -41,18 +42,25 @@ func (r *ProductRepository) FindAll(ctx context.Context) (products []product.Pro
 
 func (r *ProductRepository) FindByID(ctx context.Context, id string) (product product.Product, err error) {
 	row := r.Db.QueryRow("SELECT id, name, price, category_id FROM products WHERE id = ?", id)
-	err = row.Scan(&product.ID, &product.Name, &product.Price, &product.Category.ID)
-	if err != nil {
-		log.Print(ctx, err)
+	errData := row.Scan(&product.ID, &product.Name, &product.Price, &product.Category.ID)
+	if errData != nil {
+		if errData == sql.ErrNoRows {
+			return
+		}
+		err = errData
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
 	return
 }
 
 func (r *ProductRepository) FindByCategory(ctx context.Context, categoryID string) (products []product.Product, err error) {
-	rows, err := r.Db.Query("SELECT id, name, price, category_id FROM products WHERE category_id = ?", categoryID)
-	if err != nil {
-		log.Print(ctx, err)
+	rows, errData := r.Db.Query("SELECT id, name, price, category_id FROM products WHERE category_id = ?", categoryID)
+	if errData != nil {
+		if errData == sql.ErrNoRows {
+			return
+		}
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
 	defer rows.Close()
@@ -61,7 +69,7 @@ func (r *ProductRepository) FindByCategory(ctx context.Context, categoryID strin
 		var p product.Product
 		err := rows.Scan(&p.ID, &p.Name, &p.Price)
 		if err != nil {
-			log.Print(ctx, err)
+			log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 			continue
 		}
 		products = append(products, p)
@@ -72,16 +80,16 @@ func (r *ProductRepository) FindByCategory(ctx context.Context, categoryID strin
 func (r *ProductRepository) Save(ctx context.Context, p product.Product) error {
 	stmt, err := r.Db.Prepare("INSERT INTO products (id, name, price, category_id) VALUES (?, ?, ?, ?)")
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	res, err := stmt.Exec(p.ID, p.Name, p.Price, p.Category.ID)
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	if res != nil {
-		log.Print(ctx, "Product saved")
+		log.Print(utils.BuildLogger(ctx, "Product saved"))
 	}
 	return nil
 }
@@ -89,16 +97,16 @@ func (r *ProductRepository) Save(ctx context.Context, p product.Product) error {
 func (r *ProductRepository) Update(ctx context.Context, p product.Product) error {
 	stmt, err := r.Db.Prepare("UPDATE products SET name = ?, price = ?, category_id = ? WHERE id = ?")
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	res, err := stmt.Exec(p.Name, p.Price, p.Category.ID, p.ID)
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	if res != nil {
-		log.Print(ctx, "Product updated")
+		log.Print(utils.BuildLogger(ctx, "Product updated"))
 	}
 	return nil
 }
@@ -106,16 +114,16 @@ func (r *ProductRepository) Update(ctx context.Context, p product.Product) error
 func (r *ProductRepository) Delete(ctx context.Context, id string) error {
 	stmt, err := r.Db.Prepare("DELETE FROM products WHERE id = ?")
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	res, err := stmt.Exec(id)
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	if res != nil {
-		log.Print(ctx, "Product deleted")
+		log.Print(utils.BuildLogger(ctx, "Product deleted"))
 	}
 	return nil
 }
@@ -123,16 +131,16 @@ func (r *ProductRepository) Delete(ctx context.Context, id string) error {
 func (r *ProductRepository) ApplyPromotionOnProductsByCategory(ctx context.Context, categoryId string, percentage float64) error {
 	stmt, err := r.Db.Prepare("UPDATE products SET price = price - (price * ?) WHERE category_id = ?")
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	res, err := stmt.Exec(percentage, categoryId)
 	if err != nil {
-		log.Print(ctx, err)
+		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
 	if res != nil {
-		log.Print(ctx, "Promotion updated")
+		log.Print(utils.BuildLogger(ctx, "Promotion applied"))
 	}
 	return nil
 }
