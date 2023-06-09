@@ -51,5 +51,8 @@ func Start() {
 		port = "8080"
 	}
 	log.Println("Listening on port", port)
-	http.ListenAndServe(":"+port, router)
+	err := http.ListenAndServe(":"+port, router)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

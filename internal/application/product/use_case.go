@@ -127,7 +127,7 @@ func (u *ProductUseCase) Delete(ctx context.Context, id string) applicationCommo
 
 func (u *ProductUseCase) ApplyPromotion(ctx context.Context, input ApplyPromotionProductInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
-	output = input.Validate()
+	output.Errors = input.Validate()
 	if len(output.Errors) > 0 {
 		output.Code = 400
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
@@ -160,7 +160,7 @@ func (u *ProductUseCase) ApplyPromotion(ctx context.Context, input ApplyPromotio
 
 func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(ctx context.Context, input ApplyPromotionProductByCategoryInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
-	output = input.Validate()
+	output.Errors = input.Validate()
 	if len(output.Errors) > 0 {
 		output.Code = 400
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())

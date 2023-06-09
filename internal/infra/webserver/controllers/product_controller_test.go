@@ -48,7 +48,7 @@ func (suite *ProductControllerTest) TestGetAll() {
 	// Act
 	router.ServeHTTP(recorder, req)
 	var products []domainProduct.Product
-	errUnmarshal := json.Unmarshal([]byte(recorder.Body.String()), &products)
+	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &products)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal products")
 	}
@@ -102,7 +102,7 @@ func (suite *ProductControllerTest) TestPost() {
 	router.ServeHTTP(recorder, req)
 
 	var output common.Output
-	errUnmarshal := json.Unmarshal([]byte(recorder.Body.String()), &output)
+	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &output)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal output")
 	}
