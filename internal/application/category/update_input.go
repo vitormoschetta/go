@@ -1,16 +1,21 @@
 package category
 
 type UpdateCategoryInput struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID     string   `json:"id"`
+	Name   string   `json:"name"`
+	Errors []string `json:"-"`
 }
 
-func (c *UpdateCategoryInput) Validate() (errors []string) {
+func (c *UpdateCategoryInput) IsInvalid() bool {
+	c.validate()
+	return len(c.Errors) > 0
+}
+
+func (c *UpdateCategoryInput) validate() {
 	if c.ID == "" {
-		errors = append(errors, "ID is required")
+		c.Errors = append(c.Errors, "ID is required")
 	}
 	if c.Name == "" {
-		errors = append(errors, "Name is required")
+		c.Errors = append(c.Errors, "Name is required")
 	}
-	return
 }

@@ -5,16 +5,21 @@ import (
 )
 
 type CreateCategoryInput struct {
-	Name string `json:"name"`
+	Name   string   `json:"name"`
+	Errors []string `json:"-"`
 }
 
-func (c *CreateCategoryInput) Validate() (errors []string) {
-	if c.Name == "" {
-		errors = append(errors, "Name is required")
-	}
-	return
+func (c *CreateCategoryInput) IsInvalid() bool {
+	c.validate()
+	return len(c.Errors) > 0
 }
 
 func (c *CreateCategoryInput) ToCategoryEntity() category.Category {
 	return category.NewCategory(c.Name)
+}
+
+func (c *CreateCategoryInput) validate() {
+	if c.Name == "" {
+		c.Errors = append(c.Errors, "Name is required")
+	}
 }

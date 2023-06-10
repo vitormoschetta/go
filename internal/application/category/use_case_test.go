@@ -24,7 +24,7 @@ func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 	output := useCase.Create(ctx, input)
 	// Assert
 	assert.Equal(t, 201, output.Code)
-	assert.Nil(t, output.Errors)
+	assert.Len(t, output.Errors, 0)
 }
 
 func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
@@ -41,7 +41,7 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 	// Assert
 	assert.Equal(t, 400, output.Code)
 	assert.NotNil(t, output.Errors)
-	assert.Equal(t, 1, len(output.Errors))
+	assert.Len(t, output.Errors, 1)
 }
 
 func Test_With_Category_Add_With_Database_Error(t *testing.T) {
@@ -83,7 +83,7 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	output = useCase.Update(ctx, input2)
 	// Assert
 	assert.Equal(t, 200, output.Code)
-	assert.Nil(t, output.Errors)
+	assert.Len(t, output.Errors, 0)
 	assert.Equal(t, "Category 2", output.Data.(category.Category).Name)
 }
 
@@ -109,7 +109,7 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 	// Assert
 	assert.Equal(t, 404, output.Code)
 	assert.NotNil(t, output.Errors)
-	assert.Equal(t, 1, len(output.Errors))
+	assert.Len(t, output.Errors, 1)
 }
 
 func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
@@ -134,7 +134,7 @@ func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
 	// Assert
 	assert.Equal(t, 400, output.Code)
 	assert.NotNil(t, output.Errors)
-	assert.Equal(t, 1, len(output.Errors))
+	assert.Len(t, output.Errors, 1)
 }
 
 func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
@@ -159,5 +159,5 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	// Assert
 	assert.Equal(t, 400, output.Code)
 	assert.NotNil(t, output.Errors)
-	assert.Equal(t, 1, len(output.Errors))
+	assert.Len(t, output.Errors, 1)
 }

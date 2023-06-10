@@ -23,13 +23,19 @@ func NewOutput(ctx context.Context) Output {
 	}
 }
 
-func (r *Output) AddError(error string, code int) {
-	r.Errors = append(r.Errors, error)
+func (r *Output) AddError(code int, error string) {
 	r.Code = code
+	r.Errors = append(r.Errors, error)
 }
 
-func (r *Output) HasErrors() bool {
-	return len(r.Errors) > 0
+func (r *Output) AddErrors(code int, errors []string) {
+	r.Code = code
+	r.Errors = append(r.Errors, errors...)
+}
+
+func (r *Output) Ok(code int, data interface{}) {
+	r.Code = code
+	r.Data = data
 }
 
 func (r *Output) BuildLogger() string {

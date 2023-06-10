@@ -20,55 +20,46 @@ func NewCategoryUseCase(pR common.IRepository[category.Category]) *CategoryUseCa
 
 func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
-	output.Errors = input.Validate()
-	if len(output.Errors) > 0 {
-		output.Code = 400
-		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+	if input.IsInvalid() {
+		output.AddErrors(400, input.Errors)
 		return output
 	}
 	entity := input.ToCategoryEntity()
 	err := u.Repository.Save(ctx, entity)
 	if err != nil {
-		output.Code = 500
-		output.Errors = append(output.Errors, "Internal error")
+		output.AddError(500, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Code = 201
-	output.Data = entity
+	output.Ok(201, entity)
 	return output
 }
 
 func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
-	output.Errors = input.Validate()
-	if len(output.Errors) > 0 {
-		output.Code = 400
-		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
+	if input.IsInvalid() {
+		output.AddErrors(400, input.Errors)
 		return output
 	}
 	entity, err := u.Repository.FindByID(ctx, input.ID)
 	if err != nil {
-		output.Code = 500
-		output.Errors = append(output.Errors, "Internal error")
+		output.AddError(500, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if entity.ID == "" {
-		output.Code = 404
-		output.Errors = append(output.Errors, "Category not found")
+		output.AddError(404, "Category not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	entity.Update(input.Name)
 	err = u.Repository.Update(ctx, entity)
 	if err != nil {
-		output.Code = 500
-		output.Errors = append(output.Errors, "Internal error")
+		output.AddError(500, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Data = entity
+	output.Ok(200, entity)
 	return output
 }
 
@@ -76,24 +67,21 @@ func (u *CategoryUseCases) Delete(ctx context.Context, id string) applicationCom
 	output := applicationCommon.NewOutput(ctx)
 	entity, err := u.Repository.FindByID(ctx, id)
 	if err != nil {
-		output.Code = 500
-		output.Errors = append(output.Errors, "Internal error")
+		output.AddError(500, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if entity.ID == "" {
-		output.Code = 404
-		output.Errors = append(output.Errors, "Category not found")
+		output.AddError(404, "Category not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	err = u.Repository.Delete(ctx, entity.ID)
 	if err != nil {
-		output.Code = 500
-		output.Errors = append(output.Errors, "Internal error")
+		output.AddError(500, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Data = entity
+	output.Ok(200, nil)
 	return output
 }
