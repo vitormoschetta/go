@@ -18,5 +18,4 @@ func (p *ApplyPromotionProductInput) validate() {
 	if p.Percentage <= 0 {
 		p.Errors = append(p.Errors, "Percentage is less than or equal to zero")
 	}
-	return
 }

@@ -21,15 +21,6 @@ func NewProduct(name string, price float64, category category.Category) Product 
 	}
 }
 
-func NewProductWithID(id, name string, price float64, category category.Category) *Product {
-	return &Product{
-		ID:       id,
-		Name:     name,
-		Price:    price,
-		Category: category,
-	}
-}
-
 func (p *Product) Update(name string, price float64, category category.Category) {
 	p.Name = name
 	p.Price = price

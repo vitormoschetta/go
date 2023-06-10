@@ -14,13 +14,6 @@ func NewCategory(name string) Category {
 	}
 }
 
-func NewCategoryWithID(id, name string) *Category {
-	return &Category{
-		ID:   id,
-		Name: name,
-	}
-}
-
 func (c *Category) Update(name string) {
 	c.Name = name
 }

@@ -30,7 +30,7 @@ func (r *CategoryRepository) FindAll(ctx context.Context) (categories []category
 		err := rows.Scan(&c.ID, &c.Name)
 		if err != nil {
 			log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
-			continue
+			break
 		}
 		categories = append(categories, c)
 	}
@@ -46,7 +46,6 @@ func (r *CategoryRepository) FindByID(ctx context.Context, id string) (category 
 		}
 		err = errData
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
-		return
 	}
 	return
 }
