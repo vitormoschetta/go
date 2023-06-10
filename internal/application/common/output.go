@@ -23,14 +23,14 @@ func NewOutput(ctx context.Context) Output {
 	}
 }
 
-func (r *Output) AddError(code int, error string) {
+func (r *Output) AddError(code int, err string) {
 	r.Code = code
-	r.Errors = append(r.Errors, error)
+	r.Errors = append(r.Errors, err)
 }
 
-func (r *Output) AddErrors(code int, errors []string) {
+func (r *Output) AddErrors(code int, errs []string) {
 	r.Code = code
-	r.Errors = append(r.Errors, errors...)
+	r.Errors = append(r.Errors, errs...)
 }
 
 func (r *Output) Ok(code int, data interface{}) {
