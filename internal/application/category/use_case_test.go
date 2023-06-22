@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/share/middlewares"
 	"github.com/vitormoschetta/go/mock"
@@ -23,7 +24,7 @@ func Test_With_Category_Add_With_Valid_Data(t *testing.T) {
 	// Act
 	output := useCase.Create(ctx, input)
 	// Assert
-	assert.Equal(t, 201, output.Code)
+	assert.Equal(t, common.DomainCodeSuccess, output.Code)
 	assert.Len(t, output.Errors, 0)
 }
 
@@ -39,7 +40,7 @@ func Test_With_Category_Add_With_Invalid_Name(t *testing.T) {
 	// Act
 	output := useCase.Create(ctx, input)
 	// Assert
-	assert.Equal(t, 400, output.Code)
+	assert.Equal(t, common.DomainCodeInvalidInput, output.Code)
 	assert.NotNil(t, output.Errors)
 	assert.Len(t, output.Errors, 1)
 }
@@ -57,7 +58,7 @@ func Test_With_Category_Add_With_Database_Error(t *testing.T) {
 	// Act
 	output := useCase.Create(ctx, input)
 	// Assert
-	assert.Equal(t, 500, output.Code)
+	assert.Equal(t, common.DomainCodeInternalError, output.Code)
 	assert.NotNil(t, output.Errors)
 	assert.Equal(t, 1, len(output.Errors))
 }
@@ -72,8 +73,8 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 		Name: "Category 1",
 	}
 	output := useCase.Create(ctx, input)
-	if output.Code != 201 {
-		t.Errorf("Expected status code 201, got %v", output.Code)
+	if output.Code != common.DomainCodeSuccess {
+		t.Errorf("Expected domain code %v, got %v", common.DomainCodeSuccess, output.Code)
 	}
 	// Act
 	input2 := UpdateCategoryInput{
@@ -82,7 +83,7 @@ func Test_With_Category_Update_With_Valid_Data(t *testing.T) {
 	}
 	output = useCase.Update(ctx, input2)
 	// Assert
-	assert.Equal(t, 200, output.Code)
+	assert.Equal(t, common.DomainCodeSuccess, output.Code)
 	assert.Len(t, output.Errors, 0)
 	assert.Equal(t, "Category 2", output.Data.(category.Category).Name)
 }
@@ -97,8 +98,8 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 		Name: "Category 1",
 	}
 	output := useCase.Create(ctx, input)
-	if output.Code != 201 {
-		t.Errorf("Expected status code 201, got %v", output.Code)
+	if output.Code != common.DomainCodeSuccess {
+		t.Errorf("Expected domain code %v, got %v", common.DomainCodeSuccess, output.Code)
 	}
 	// Act
 	input2 := UpdateCategoryInput{
@@ -107,7 +108,7 @@ func Test_With_Category_Update_With_Invalid_ID(t *testing.T) {
 	}
 	output = useCase.Update(ctx, input2)
 	// Assert
-	assert.Equal(t, 404, output.Code)
+	assert.Equal(t, common.DomainCodeNotFound, output.Code)
 	assert.NotNil(t, output.Errors)
 	assert.Len(t, output.Errors, 1)
 }
@@ -122,8 +123,8 @@ func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
 		Name: "Category 1",
 	}
 	output := useCase.Create(ctx, input)
-	if output.Code != 201 {
-		t.Errorf("Expected status code 201, got %v", output.Code)
+	if output.Code != common.DomainCodeSuccess {
+		t.Errorf("Expected domain code %v, got %v", common.DomainCodeSuccess, output.Code)
 	}
 	// Act
 	input2 := UpdateCategoryInput{
@@ -132,7 +133,7 @@ func Test_With_Category_Update_With_ID_Empty(t *testing.T) {
 	}
 	output = useCase.Update(ctx, input2)
 	// Assert
-	assert.Equal(t, 400, output.Code)
+	assert.Equal(t, common.DomainCodeInvalidInput, output.Code)
 	assert.NotNil(t, output.Errors)
 	assert.Len(t, output.Errors, 1)
 }
@@ -147,8 +148,8 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 		Name: "Category 1",
 	}
 	output := useCase.Create(ctx, input)
-	if output.Code != 201 {
-		t.Errorf("Expected status code 201, got %v", output.Code)
+	if output.Code != common.DomainCodeSuccess {
+		t.Errorf("Expected domain code %v, got %v", common.DomainCodeSuccess, output.Code)
 	}
 	// Act
 	input2 := UpdateCategoryInput{
@@ -157,7 +158,7 @@ func Test_With_Category_Update_With_Invalid_Name(t *testing.T) {
 	}
 	output = useCase.Update(ctx, input2)
 	// Assert
-	assert.Equal(t, 400, output.Code)
+	assert.Equal(t, common.DomainCodeInvalidInput, output.Code)
 	assert.NotNil(t, output.Errors)
 	assert.Len(t, output.Errors, 1)
 }

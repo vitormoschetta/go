@@ -119,7 +119,7 @@ func (c *ProductController) Post(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePost))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -140,7 +140,7 @@ func (c *ProductController) Put(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -156,7 +156,7 @@ func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypeDelete))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -177,7 +177,7 @@ func (c *ProductController) PutPromotion(w http.ResponseWriter, r *http.Request)
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -198,6 +198,6 @@ func (c *ProductController) PutPromotionbyCategory(w http.ResponseWriter, r *htt
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }

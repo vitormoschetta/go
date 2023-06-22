@@ -23,67 +23,67 @@ func NewProductUseCase(pR product.IProductRepository, cR common.IRepository[cate
 func (u *ProductUseCase) Create(ctx context.Context, input CreateProductInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
 	if input.IsInvalid() {
-		output.AddErrors(400, input.Errors)
+		output.SetErrors(applicationCommon.DomainCodeInvalidInput, input.Errors)
 		return output
 	}
 	category, err := u.CategoryRepository.FindByID(ctx, input.CategoryId)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if category.ID == "" {
-		output.AddError(404, "Category not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Category not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	product := input.ToProductModel(category)
 	err = u.ProductRepository.Save(ctx, product)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Ok(201, product)
+	output.SetOk(product)
 	return output
 }
 
 func (u *ProductUseCase) Update(ctx context.Context, input UpdateProductInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
 	if input.IsInvalid() {
-		output.AddErrors(400, input.Errors)
+		output.SetErrors(applicationCommon.DomainCodeInvalidInput, input.Errors)
 		return output
 	}
 	product, err := u.ProductRepository.FindByID(ctx, input.ID)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if product.ID == "" {
-		output.AddError(404, "Product not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Product not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	category, err := u.CategoryRepository.FindByID(ctx, product.Category.ID)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if category.ID == "" {
-		output.AddError(404, "Category not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Category not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	product.Update(input.Name, input.Price, category)
 	err = u.ProductRepository.Update(ctx, product)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Ok(200, product)
+	output.SetOk(product)
 	return output
 }
 
@@ -91,76 +91,76 @@ func (u *ProductUseCase) Delete(ctx context.Context, id string) applicationCommo
 	output := applicationCommon.NewOutput(ctx)
 	product, err := u.ProductRepository.FindByID(ctx, id)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if product.ID == "" {
-		output.AddError(404, "Product not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Product not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	err = u.ProductRepository.Delete(ctx, product.ID)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Ok(200, nil)
+	output.SetOk(nil)
 	return output
 }
 
 func (u *ProductUseCase) ApplyPromotion(ctx context.Context, input ApplyPromotionProductInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
 	if input.IsInvalid() {
-		output.AddErrors(400, input.Errors)
+		output.SetErrors(applicationCommon.DomainCodeInvalidInput, input.Errors)
 		return output
 	}
 	product, err := u.ProductRepository.FindByID(ctx, input.ProductId)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if product.ID == "" {
-		output.AddError(404, "Product not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Product not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	product.ApplyPromotion(input.Percentage)
 	err = u.ProductRepository.Update(ctx, product)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Ok(200, product)
+	output.SetOk(product)
 	return output
 }
 
 func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(ctx context.Context, input ApplyPromotionProductByCategoryInput) applicationCommon.Output {
 	output := applicationCommon.NewOutput(ctx)
 	if input.IsInvalid() {
-		output.AddErrors(400, input.Errors)
+		output.SetErrors(applicationCommon.DomainCodeInvalidInput, input.Errors)
 		return output
 	}
 	category, err := u.CategoryRepository.FindByID(ctx, input.CategoryId)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	if category.ID == "" {
-		output.AddError(404, "Category not found")
+		output.SetError(applicationCommon.DomainCodeNotFound, "Category not found")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
 	err = u.ProductRepository.ApplyPromotionOnProductsByCategory(ctx, input.CategoryId, input.Percentage)
 	if err != nil {
-		output.AddError(500, "Internal error")
+		output.SetError(applicationCommon.DomainCodeInternalError, "Internal error")
 		log.Println(output.BuildLogger(), " - ", utils.GetCallingPackage())
 		return output
 	}
-	output.Ok(200, nil)
+	output.SetOk(nil)
 	return output
 }

@@ -98,7 +98,7 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(int(output.Code))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -119,7 +119,7 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(int(output.Code))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -135,6 +135,6 @@ func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(output.Code)
+	w.WriteHeader(int(output.Code))
 	_, _ = w.Write(outputJSON)
 }

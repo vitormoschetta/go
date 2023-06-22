@@ -7,8 +7,18 @@ import (
 	"github.com/vitormoschetta/go/internal/share/middlewares"
 )
 
+type DomainCode int
+
+const (
+	DomainCodeSuccess       DomainCode = 1
+	DomainCodeInvalidInput  DomainCode = 2
+	DomainCodeInvalidEntity DomainCode = 3
+	DomainCodeInternalError DomainCode = 4
+	DomainCodeNotFound      DomainCode = 5
+)
+
 type Output struct {
-	Code          int         `json:"code"`
+	Code          DomainCode  `json:"code"`
 	Errors        []string    `json:"errors"`
 	CorrelationID string      `json:"correlation_id"`
 	Data          interface{} `json:"data"`
@@ -16,25 +26,25 @@ type Output struct {
 
 func NewOutput(ctx context.Context) Output {
 	return Output{
-		Code:          200,
+		Code:          DomainCodeSuccess,
 		Errors:        []string{},
 		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
 		Data:          nil,
 	}
 }
 
-func (r *Output) AddError(code int, err string) {
+func (r *Output) SetError(code DomainCode, err string) {
 	r.Code = code
 	r.Errors = append(r.Errors, err)
 }
 
-func (r *Output) AddErrors(code int, errs []string) {
+func (r *Output) SetErrors(code DomainCode, errs []string) {
 	r.Code = code
 	r.Errors = append(r.Errors, errs...)
 }
 
-func (r *Output) Ok(code int, data interface{}) {
-	r.Code = code
+func (r *Output) SetOk(data interface{}) {
+	r.Code = DomainCodeSuccess
 	r.Data = data
 }
 
