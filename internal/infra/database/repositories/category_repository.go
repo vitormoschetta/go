@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/share/utils"
+	"github.com/vitormoschetta/go/internal/shared/utils"
 )
 
 type CategoryRepository struct {

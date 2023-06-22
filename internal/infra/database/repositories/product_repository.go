@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/product"
-	"github.com/vitormoschetta/go/internal/share/utils"
+	"github.com/vitormoschetta/go/internal/shared/utils"
 )
 
 type ProductRepository struct {

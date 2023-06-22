@@ -12,7 +12,7 @@ import (
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
 	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
-	"github.com/vitormoschetta/go/internal/share/middlewares"
+	"github.com/vitormoschetta/go/internal/shared/middlewares"
 )
 
 func Start() {
@@ -29,6 +29,7 @@ func Start() {
 
 	router := mux.NewRouter()
 	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.ErrorHandling)
 	router.Use(middlewares.LoggingMiddleware)
 	router.Use(middlewares.HeadersMiddleware)
 

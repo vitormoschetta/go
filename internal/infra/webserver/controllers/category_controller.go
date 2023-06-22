@@ -9,7 +9,7 @@ import (
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
-	"github.com/vitormoschetta/go/internal/share/utils"
+	"github.com/vitormoschetta/go/internal/shared/utils"
 )
 
 type CategoryController struct {

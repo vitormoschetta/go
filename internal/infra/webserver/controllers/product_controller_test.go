@@ -12,7 +12,7 @@ import (
 	"github.com/vitormoschetta/go/internal/application/common"
 	applicationProduct "github.com/vitormoschetta/go/internal/application/product"
 	domainProduct "github.com/vitormoschetta/go/internal/domain/product"
-	"github.com/vitormoschetta/go/internal/share/middlewares"
+	"github.com/vitormoschetta/go/internal/shared/middlewares"
 	"github.com/vitormoschetta/go/mock"
 )
 

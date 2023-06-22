@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
-	"github.com/vitormoschetta/go/internal/share/middlewares"
+	"github.com/vitormoschetta/go/internal/shared/middlewares"
 	"github.com/vitormoschetta/go/mock"
 )
 
