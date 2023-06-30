@@ -9,11 +9,11 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/suite"
-	"github.com/vitormoschetta/go/internal/application/common"
 	applicationProduct "github.com/vitormoschetta/go/internal/application/product"
 	domainProduct "github.com/vitormoschetta/go/internal/domain/product"
 	"github.com/vitormoschetta/go/mock"
 	"github.com/vitormoschetta/go/pkg/middlewares"
+	"github.com/vitormoschetta/go/pkg/output"
 )
 
 type ProductControllerTest struct {
@@ -101,14 +101,14 @@ func (suite *ProductControllerTest) TestPost() {
 	// Act
 	router.ServeHTTP(recorder, req)
 
-	var output common.Output
-	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &output)
+	var out output.Output
+	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &out)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal output")
 	}
 
 	// Assert
 	suite.Assert().Equal(http.StatusNotFound, recorder.Code)
-	suite.Assert().Len(output.Errors, 1)
-	suite.Assert().Equal("Category not found", output.Errors[0])
+	suite.Assert().Len(out.Errors, 1)
+	suite.Assert().Equal("Category not found", out.Errors[0])
 }

@@ -1,6 +1,6 @@
 package controllers
 
-import "github.com/vitormoschetta/go/internal/application/common"
+import "github.com/vitormoschetta/go/pkg/output"
 
 type VerbType int
 
@@ -11,20 +11,20 @@ const (
 	VerbTypeDelete VerbType = 4
 )
 
-func BuildHttpStatusCode(domainCode common.DomainCode, verb VerbType) int {
+func BuildHttpStatusCode(domainCode output.DomainCode, verb VerbType) int {
 	switch domainCode {
-	case common.DomainCodeSuccess:
+	case output.DomainCodeSuccess:
 		if verb == VerbTypePost {
 			return 201
 		}
 		return 200
-	case common.DomainCodeInvalidInput:
+	case output.DomainCodeInvalidInput:
 		return 400
-	case common.DomainCodeInvalidEntity:
+	case output.DomainCodeInvalidEntity:
 		return 400
-	case common.DomainCodeInternalError:
+	case output.DomainCodeInternalError:
 		return 500
-	case common.DomainCodeNotFound:
+	case output.DomainCodeNotFound:
 		return 404
 	default:
 		return 500
