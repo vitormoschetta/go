@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/vitormoschetta/go/internal/shared/middlewares"
+	"github.com/vitormoschetta/go/pkg/middlewares"
 )
 
 type DomainCode int

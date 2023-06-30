@@ -16,7 +16,7 @@ const (
 
 type ContextKey string
 
-func TracingMiddleware(next http.Handler) http.Handler {
+func Tracing(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		traceID := r.Header.Get(CorrelationIDHeader)
 		if traceID == "" {

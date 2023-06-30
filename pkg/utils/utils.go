@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strconv"
 
-	"github.com/vitormoschetta/go/internal/shared/middlewares"
+	"github.com/vitormoschetta/go/pkg/middlewares"
 )
 
 func FormatErrOut(ctx context.Context, err error) []byte {

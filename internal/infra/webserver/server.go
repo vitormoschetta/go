@@ -12,7 +12,7 @@ import (
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
 	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
-	"github.com/vitormoschetta/go/internal/shared/middlewares"
+	"github.com/vitormoschetta/go/pkg/middlewares"
 )
 
 func Start() {
@@ -28,10 +28,10 @@ func Start() {
 	productController := controllers.NewProductController(productRepository, productUseCase)
 
 	router := mux.NewRouter()
-	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.Tracing)
 	router.Use(middlewares.ErrorHandling)
-	router.Use(middlewares.LoggingMiddleware)
-	router.Use(middlewares.HeadersMiddleware)
+	router.Use(middlewares.LoggingHandling)
+	router.Use(middlewares.AcceptJSON)
 
 	router.HandleFunc("/api/v1/categories", categoryController.GetAll).Methods("GET")
 	router.HandleFunc("/api/v1/categories", categoryController.Post).Methods("POST")

@@ -12,8 +12,8 @@ import (
 	"github.com/vitormoschetta/go/internal/application/common"
 	applicationProduct "github.com/vitormoschetta/go/internal/application/product"
 	domainProduct "github.com/vitormoschetta/go/internal/domain/product"
-	"github.com/vitormoschetta/go/internal/shared/middlewares"
 	"github.com/vitormoschetta/go/mock"
+	"github.com/vitormoschetta/go/pkg/middlewares"
 )
 
 type ProductControllerTest struct {
@@ -42,7 +42,7 @@ func (suite *ProductControllerTest) TestGetAll() {
 	}
 	recorder := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.Tracing)
 	router.HandleFunc("/", suite.productController.GetAll).Methods("GET")
 
 	// Act
@@ -67,7 +67,7 @@ func (suite *ProductControllerTest) TestGet() {
 	}
 	recorder := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.Tracing)
 	router.HandleFunc("/{id}", suite.productController.Get).Methods("GET")
 
 	// Act
@@ -95,7 +95,7 @@ func (suite *ProductControllerTest) TestPost() {
 	}
 	recorder := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.Use(middlewares.TracingMiddleware)
+	router.Use(middlewares.Tracing)
 	router.HandleFunc("/", suite.productController.Post).Methods("POST")
 
 	// Act

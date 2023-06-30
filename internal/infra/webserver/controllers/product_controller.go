@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	productApplication "github.com/vitormoschetta/go/internal/application/product"
 	"github.com/vitormoschetta/go/internal/domain/product"
-	"github.com/vitormoschetta/go/internal/shared/utils"
+	"github.com/vitormoschetta/go/pkg/utils"
 )
 
 type ProductController struct {

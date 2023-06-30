@@ -7,7 +7,7 @@ import (
 	applicationCommon "github.com/vitormoschetta/go/internal/application/common"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
-	"github.com/vitormoschetta/go/internal/shared/utils"
+	"github.com/vitormoschetta/go/pkg/utils"
 )
 
 type CategoryUseCases struct {
