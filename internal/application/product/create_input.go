@@ -6,27 +6,22 @@ import (
 )
 
 type CreateProductInput struct {
-	Name       string   `json:"name"`
-	Price      float64  `json:"price"`
-	CategoryId string   `json:"category_id"`
-	Errors     []string `json:"-"`
+	Name       string
+	Price      float64
+	CategoryId string
 }
 
-func (p *CreateProductInput) IsInvalid() bool {
-	p.validate()
-	return len(p.Errors) > 0
-}
-
-func (p *CreateProductInput) validate() {
+func (p *CreateProductInput) Validate() (errs []string) {
 	if p.Name == "" {
-		p.Errors = append(p.Errors, "Name is required")
+		errs = append(errs, "Name is required")
 	}
 	if p.Price <= 0 {
-		p.Errors = append(p.Errors, "Price is less than or equal to zero")
+		errs = append(errs, "Price is less than or equal to zero")
 	}
 	if p.CategoryId == "" {
-		p.Errors = append(p.Errors, "Category is required")
+		errs = append(errs, "CategoryId is required")
 	}
+	return errs
 }
 
 func (p *CreateProductInput) ToEntity(category category.Category) product.Product {

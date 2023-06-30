@@ -3,8 +3,8 @@ package category
 import "github.com/google/uuid"
 
 type Category struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   string
+	Name string
 }
 
 func NewCategory(name string) Category {

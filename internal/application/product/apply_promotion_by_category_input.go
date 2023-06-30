@@ -1,21 +1,16 @@
 package product
 
 type ApplyPromotionProductByCategoryInput struct {
-	CategoryId string  `json:"category_id" binding:"required"`
-	Percentage float64 `json:"percentage" binding:"required"`
-	Errors     []string
+	CategoryId string
+	Percentage float64
 }
 
-func (p *ApplyPromotionProductByCategoryInput) IsInvalid() bool {
-	p.validate()
-	return len(p.Errors) > 0
-}
-
-func (p *ApplyPromotionProductByCategoryInput) validate() {
+func (p *ApplyPromotionProductByCategoryInput) Validate() (errs []string) {
 	if p.CategoryId == "" {
-		p.Errors = append(p.Errors, "Category is required")
+		errs = append(errs, "CategoryId is required")
 	}
 	if p.Percentage <= 0 {
-		p.Errors = append(p.Errors, "Percentage is less than or equal to zero")
+		errs = append(errs, "Percentage is less than or equal to zero")
 	}
+	return errs
 }

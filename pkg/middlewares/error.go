@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -29,6 +28,5 @@ func ErrorHandling(next http.Handler) http.Handler {
 			}
 		}()
 		next.ServeHTTP(w, r)
-		fmt.Println("After")
 	})
 }
