@@ -13,15 +13,15 @@ type ErrorResponse struct {
 
 func ErrorHandling(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		traceID, ok := r.Context().Value(CorrelationKey).(string)
+		correlationID, ok := r.Context().Value(CorrelationKey).(string)
 		if !ok {
-			traceID = "unknown"
+			correlationID = "unknown"
 		}
 		defer func() {
 			if r := recover(); r != nil {
 				output := ErrorResponse{
 					Errors:        []string{"Internal error"},
-					CorrelationID: traceID,
+					CorrelationID: correlationID,
 				}
 				w.WriteHeader(http.StatusInternalServerError)
 				outputJson, _ := json.Marshal(output)
