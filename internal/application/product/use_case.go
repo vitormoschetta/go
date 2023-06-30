@@ -37,7 +37,7 @@ func (u *ProductUseCase) Create(ctx context.Context, input CreateProductInput) o
 		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
 		return out
 	}
-	product := input.ToProductModel(category)
+	product := input.ToEntity(category)
 	err = u.ProductRepository.Save(ctx, product)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")

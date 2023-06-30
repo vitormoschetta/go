@@ -29,6 +29,6 @@ func (p *CreateProductInput) validate() {
 	}
 }
 
-func (p *CreateProductInput) ToProductModel(category category.Category) product.Product {
+func (p *CreateProductInput) ToEntity(category category.Category) product.Product {
 	return product.NewProduct(p.Name, p.Price, category)
 }

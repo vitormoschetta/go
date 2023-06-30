@@ -14,7 +14,7 @@ func (c *CreateCategoryInput) IsInvalid() bool {
 	return len(c.Errors) > 0
 }
 
-func (c *CreateCategoryInput) ToCategoryEntity() category.Category {
+func (c *CreateCategoryInput) ToEntity() category.Category {
 	return category.NewCategory(c.Name)
 }
 
