@@ -1,6 +1,9 @@
 package responses
 
 import (
+	"context"
+
+	"github.com/vitormoschetta/go/pkg/middlewares"
 	"github.com/vitormoschetta/go/pkg/output"
 )
 
@@ -15,5 +18,13 @@ func OutputToResponse(output output.Output) Response {
 		Errors:        output.GetErrors(),
 		CorrelationID: output.GetCorrelationID(),
 		Data:          output.GetData(),
+	}
+}
+
+func ItemToResponse(item interface{}, err string, ctx context.Context) Response {
+	return Response{
+		Errors:        []string{err},
+		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
+		Data:          item,
 	}
 }

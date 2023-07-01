@@ -5,6 +5,13 @@ type ApplyPromotionProductInput struct {
 	Percentage float64
 }
 
+func NewApplyPromotionProductInput(productId string, percentage float64) *ApplyPromotionProductInput {
+	return &ApplyPromotionProductInput{
+		ProductId:  productId,
+		Percentage: percentage,
+	}
+}
+
 func (p *ApplyPromotionProductInput) Validate() (errs []string) {
 	if p.ProductId == "" {
 		errs = append(errs, "ProductId is required")

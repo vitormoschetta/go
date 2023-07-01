@@ -11,6 +11,14 @@ type CreateProductInput struct {
 	CategoryId string
 }
 
+func NewCreateProductInput(name string, price float64, categoryId string) *CreateProductInput {
+	return &CreateProductInput{
+		Name:       name,
+		Price:      price,
+		CategoryId: categoryId,
+	}
+}
+
 func (p *CreateProductInput) Validate() (errs []string) {
 	if p.Name == "" {
 		errs = append(errs, "Name is required")

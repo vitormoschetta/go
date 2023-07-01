@@ -10,10 +10,14 @@ type ProductRepositoryFake struct {
 	storage []product.Product
 }
 
-func NewProductRepositoryFake() product.IProductRepository {
+func NewProductRepositoryFake() *ProductRepositoryFake {
 	return &ProductRepositoryFake{
 		storage: []product.Product{},
 	}
+}
+
+func (r *ProductRepositoryFake) Seed(items []product.Product) {
+	r.storage = items
 }
 
 func (r *ProductRepositoryFake) FindAll(ctx context.Context) (products []product.Product, err error) {

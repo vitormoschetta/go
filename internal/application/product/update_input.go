@@ -7,6 +7,15 @@ type UpdateProductInput struct {
 	CategoryId string
 }
 
+func NewUpdateProductInput(id string, name string, price float64, categoryId string) *UpdateProductInput {
+	return &UpdateProductInput{
+		ID:         id,
+		Name:       name,
+		Price:      price,
+		CategoryId: categoryId,
+	}
+}
+
 func (p *UpdateProductInput) Validate() (errs []string) {
 	if p.ID == "" {
 		errs = append(errs, "ID is required")

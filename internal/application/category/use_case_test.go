@@ -20,8 +20,10 @@ func TestCategoryUseCase_Create_ValidData(t *testing.T) {
 	input := CreateCategoryInput{
 		Name: "Category 1",
 	}
+
 	// Act
 	out := useCase.Create(ctx, input)
+
 	// Assert
 	assert.Equal(t, output.DomainCodeSuccess, out.GetCode())
 	assert.Len(t, out.GetErrors(), 0)
@@ -36,8 +38,10 @@ func TestCategoryUseCase_Create_InvalidData(t *testing.T) {
 	input := CreateCategoryInput{
 		Name: "",
 	}
+
 	// Act
 	out := useCase.Create(ctx, input)
+
 	// Assert
 	assert.Equal(t, output.DomainCodeInvalidInput, out.GetCode())
 	assert.NotNil(t, out.GetErrors())
@@ -54,8 +58,10 @@ func TestCategoryUseCase_Create_DatabaseError(t *testing.T) {
 	input := CreateCategoryInput{
 		Name: "Category 1",
 	}
+
 	// Act
 	out := useCase.Create(ctx, input)
+
 	// Assert
 	assert.Equal(t, output.DomainCodeInternalError, out.GetCode())
 	assert.NotNil(t, out.GetErrors())

@@ -1,16 +1,16 @@
 package requests
 
 type CreateProductRequest struct {
-	Name       string `json:"name"`
-	Price      int    `json:"price"`
-	CategoryID string `json:"category_id"`
+	Name       string  `json:"name"`
+	Price      float64 `json:"price"`
+	CategoryID string  `json:"category_id"`
 }
 
 type UpdateProductRequest struct {
-	ID         string `json:"id"`
-	Name       string `json:"name"`
-	Price      int    `json:"price"`
-	CategoryID string `json:"category_id"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Price      float64 `json:"price"`
+	CategoryID string  `json:"category_id"`
 }
 
 type ApplyPromotionProductRequest struct {

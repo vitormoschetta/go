@@ -28,69 +28,79 @@ func NewCategoryController(repository common.IRepository[category.Category], use
 
 func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var response responses.Response
+
 	items, err := c.Repository.FindAll(ctx)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Internal error"))
+		response = responses.ItemToResponse(items, "Internal error", ctx)
+		json.NewEncoder(w).Encode(response)
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	json.NewEncoder(w).Encode(items)
+	response = responses.ItemToResponse(items, "", ctx)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var response responses.Response
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 	item, err := c.Repository.FindByID(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Internal error"))
-		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
+		response = responses.ItemToResponse(item, "Internal error", ctx)
+		json.NewEncoder(w).Encode(response)
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	if item.ID == "" {
 		w.WriteHeader(http.StatusNotFound)
-		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Not found"))
-		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Not found"))
+		response = responses.ItemToResponse(item, "Not found", ctx)
+		json.NewEncoder(w).Encode(response)
 		log.Print(utils.BuildLoggerWithErr3(ctx, "Not found", utils.GetCallingPackage()))
 		return
 	}
-	json.NewEncoder(w).Encode(item)
+	response = responses.ItemToResponse(item, "", ctx)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var response responses.Response
+
 	var request requests.CreateCategoryRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Bad request"))
-		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
+		response = responses.ItemToResponse(request, "Bad request", ctx)
+		json.NewEncoder(w).Encode(response)
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	input := categoryApplication.NewCreateCategoryInput(request.Name)
 	output := c.UseCase.Create(ctx, *input)
-	response := responses.OutputToResponse(output)
+	response = responses.OutputToResponse(output)
 	BuildHttpStatusCode2(output, r.Method, w)
 	json.NewEncoder(w).Encode(response)
 }
 
 func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var response responses.Response
+
 	var request requests.UpdateCategoryRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Bad request"))
-		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
+		response = responses.ItemToResponse(request, "Bad request", ctx)
+		json.NewEncoder(w).Encode(response)
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	input := categoryApplication.NewUpdateCategoryInput(request.ID, request.Name)
 	output := c.UseCase.Update(ctx, *input)
-	response := responses.OutputToResponse(output)
+	response = responses.OutputToResponse(output)
 	BuildHttpStatusCode2(output, r.Method, w)
 	json.NewEncoder(w).Encode(response)
 }
