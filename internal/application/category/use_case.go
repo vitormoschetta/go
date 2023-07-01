@@ -28,6 +28,13 @@ func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput
 	}
 
 	entity := input.ToEntity()
+	errs = entity.Validate()
+	if len(errs) > 0 {
+		out.SetError(output.DomainCodeInvalidEntity, "Internal error")
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
+		return out
+	}
+
 	err := u.Repository.Save(ctx, entity)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")

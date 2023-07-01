@@ -13,7 +13,6 @@ import (
 	domainProduct "github.com/vitormoschetta/go/internal/domain/product"
 	"github.com/vitormoschetta/go/mock"
 	"github.com/vitormoschetta/go/pkg/middlewares"
-	"github.com/vitormoschetta/go/pkg/output"
 )
 
 type ProductControllerTest struct {
@@ -101,7 +100,7 @@ func (suite *ProductControllerTest) TestPost() {
 	// Act
 	router.ServeHTTP(recorder, req)
 
-	var out output.Output
+	var out Output
 	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &out)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal output")

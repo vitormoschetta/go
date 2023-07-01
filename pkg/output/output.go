@@ -18,36 +18,52 @@ const (
 )
 
 type Output struct {
-	Code          DomainCode  `json:"code"`
-	Errors        []string    `json:"errors"`
-	CorrelationID string      `json:"correlation_id"`
-	Data          interface{} `json:"data"`
+	code          DomainCode
+	errors        []string
+	correlationID string
+	data          interface{}
 }
 
 func NewOutput(ctx context.Context) Output {
 	return Output{
-		Code:          DomainCodeSuccess,
-		Errors:        []string{},
-		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
-		Data:          nil,
+		code:          DomainCodeSuccess,
+		errors:        []string{},
+		correlationID: ctx.Value(middlewares.CorrelationKey).(string),
+		data:          nil,
 	}
 }
 
 func (r *Output) SetError(code DomainCode, err string) {
-	r.Code = code
-	r.Errors = append(r.Errors, err)
+	r.code = code
+	r.errors = append(r.errors, err)
 }
 
 func (r *Output) SetErrors(code DomainCode, errs []string) {
-	r.Code = code
-	r.Errors = append(r.Errors, errs...)
+	r.code = code
+	r.errors = append(r.errors, errs...)
 }
 
 func (r *Output) SetOk(data interface{}) {
-	r.Code = DomainCodeSuccess
-	r.Data = data
+	r.code = DomainCodeSuccess
+	r.data = data
 }
 
 func (r *Output) BuildLogger(pkg string) string {
-	return r.CorrelationID + " " + strings.Join(r.Errors, ", ") + " - " + pkg
+	return r.correlationID + " " + strings.Join(r.errors, ", ") + " - " + pkg
+}
+
+func (r *Output) GetCode() DomainCode {
+	return r.code
+}
+
+func (r *Output) GetErrors() []string {
+	return r.errors
+}
+
+func (r *Output) GetCorrelationID() string {
+	return r.correlationID
+}
+
+func (r *Output) GetData() interface{} {
+	return r.data
 }

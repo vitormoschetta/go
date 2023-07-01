@@ -98,7 +98,7 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePost))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePost))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -119,7 +119,7 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -135,6 +135,6 @@ func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypeDelete))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypeDelete))
 	_, _ = w.Write(outputJSON)
 }

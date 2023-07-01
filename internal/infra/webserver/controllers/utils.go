@@ -21,7 +21,7 @@ func BuildHttpStatusCode(domainCode output.DomainCode, verb VerbType) int {
 	case output.DomainCodeInvalidInput:
 		return 400
 	case output.DomainCodeInvalidEntity:
-		return 400
+		return 500
 	case output.DomainCodeInternalError:
 		return 500
 	case output.DomainCodeNotFound:

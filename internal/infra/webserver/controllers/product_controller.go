@@ -112,14 +112,14 @@ func (c *ProductController) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	output := c.UseCase.Create(ctx, input)
-	outputJSON, err := json.Marshal(output)
+	outputJSON, err := json.Marshal(ToOutput(output))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePost))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePost))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -133,14 +133,14 @@ func (c *ProductController) Put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	output := c.UseCase.Update(ctx, input)
-	outputJSON, err := json.Marshal(output)
+	outputJSON, err := json.Marshal(ToOutput(output))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -149,14 +149,14 @@ func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	output := c.UseCase.Delete(ctx, id)
-	outputJSON, err := json.Marshal(output)
+	outputJSON, err := json.Marshal(ToOutput(output))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypeDelete))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypeDelete))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -170,14 +170,14 @@ func (c *ProductController) PutPromotion(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	output := c.UseCase.ApplyPromotion(ctx, input)
-	outputJSON, err := json.Marshal(output)
+	outputJSON, err := json.Marshal(ToOutput(output))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -191,13 +191,13 @@ func (c *ProductController) PutPromotionbyCategory(w http.ResponseWriter, r *htt
 		return
 	}
 	output := c.UseCase.ApplyPromotionOnProductsByCategory(ctx, input)
-	outputJSON, err := json.Marshal(output)
+	outputJSON, err := json.Marshal(ToOutput(output))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return
 	}
-	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
+	w.WriteHeader(BuildHttpStatusCode(output.GetCode(), VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }

@@ -42,6 +42,12 @@ func (u *ProductUseCase) Create(ctx context.Context, input CreateProductInput) o
 	}
 
 	product := input.ToEntity(category)
+	errs = product.Validate()
+	if len(errs) > 0 {
+		out.SetError(output.DomainCodeInvalidEntity, "Internal error")
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
+		return out
+	}
 
 	err = u.ProductRepository.Save(ctx, product)
 	if err != nil {

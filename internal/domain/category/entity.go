@@ -17,3 +17,13 @@ func NewCategory(name string) Category {
 func (c *Category) Update(name string) {
 	c.Name = name
 }
+
+func (c *Category) Validate() (errs []string) {
+	if c.ID == "" {
+		errs = append(errs, "ID is required")
+	}
+	if c.Name == "" {
+		errs = append(errs, "Name is required")
+	}
+	return errs
+}

@@ -30,3 +30,19 @@ func (p *Product) Update(name string, price float64, category category.Category)
 func (p *Product) ApplyPromotion(discount float64) {
 	p.Price = p.Price - (p.Price * discount)
 }
+
+func (p *Product) Validate() (errs []string) {
+	if p.ID == "" {
+		errs = append(errs, "ID is required")
+	}
+	if p.Name == "" {
+		errs = append(errs, "Name is required")
+	}
+	if p.Price == 0 {
+		errs = append(errs, "Price is required")
+	}
+	if p.Category.ID == "" {
+		errs = append(errs, "Category is required")
+	}
+	return errs
+}
