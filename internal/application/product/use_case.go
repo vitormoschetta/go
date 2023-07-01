@@ -32,12 +32,12 @@ func (u *ProductUseCase) Create(ctx context.Context, input CreateProductInput) o
 	category, err := u.CategoryRepository.FindByID(ctx, input.CategoryId)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if category.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Category not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -46,7 +46,7 @@ func (u *ProductUseCase) Create(ctx context.Context, input CreateProductInput) o
 	err = u.ProductRepository.Save(ctx, product)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -66,24 +66,24 @@ func (u *ProductUseCase) Update(ctx context.Context, input UpdateProductInput) o
 	product, err := u.ProductRepository.FindByID(ctx, input.ID)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if product.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Product not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
 	category, err := u.CategoryRepository.FindByID(ctx, product.Category.ID)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if category.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Category not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -91,7 +91,7 @@ func (u *ProductUseCase) Update(ctx context.Context, input UpdateProductInput) o
 	err = u.ProductRepository.Update(ctx, product)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -105,19 +105,19 @@ func (u *ProductUseCase) Delete(ctx context.Context, id string) output.Output {
 	product, err := u.ProductRepository.FindByID(ctx, id)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if product.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Product not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
 	err = u.ProductRepository.Delete(ctx, product.ID)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -137,12 +137,12 @@ func (u *ProductUseCase) ApplyPromotion(ctx context.Context, input ApplyPromotio
 	product, err := u.ProductRepository.FindByID(ctx, input.ProductId)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if product.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Product not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -150,7 +150,7 @@ func (u *ProductUseCase) ApplyPromotion(ctx context.Context, input ApplyPromotio
 	err = u.ProductRepository.Update(ctx, product)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -170,19 +170,19 @@ func (u *ProductUseCase) ApplyPromotionOnProductsByCategory(ctx context.Context,
 	category, err := u.CategoryRepository.FindByID(ctx, input.CategoryId)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if category.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Category not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
 	err = u.ProductRepository.ApplyPromotionOnProductsByCategory(ctx, input.CategoryId, input.Percentage)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 

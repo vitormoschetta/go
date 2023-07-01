@@ -48,6 +48,6 @@ func (r *Output) SetOk(data interface{}) {
 	r.Data = data
 }
 
-func (r *Output) BuildLogger() string {
-	return r.CorrelationID + " " + strings.Join(r.Errors, ", ")
+func (r *Output) BuildLogger(pkg string) string {
+	return r.CorrelationID + " " + strings.Join(r.Errors, ", ") + " - " + pkg
 }

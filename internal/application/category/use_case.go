@@ -31,7 +31,7 @@ func (u *CategoryUseCases) Create(ctx context.Context, input CreateCategoryInput
 	err := u.Repository.Save(ctx, entity)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -51,12 +51,12 @@ func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput
 	entity, err := u.Repository.FindByID(ctx, input.ID)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if entity.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Category not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -64,7 +64,7 @@ func (u *CategoryUseCases) Update(ctx context.Context, input UpdateCategoryInput
 	err = u.Repository.Update(ctx, entity)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
@@ -78,19 +78,19 @@ func (u *CategoryUseCases) Delete(ctx context.Context, id string) output.Output 
 	entity, err := u.Repository.FindByID(ctx, id)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 	if entity.ID == "" {
 		out.SetError(output.DomainCodeNotFound, "Category not found")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
 	err = u.Repository.Delete(ctx, entity.ID)
 	if err != nil {
 		out.SetError(output.DomainCodeInternalError, "Internal error")
-		log.Println(out.BuildLogger(), " - ", utils.GetCallingPackage())
+		log.Println(out.BuildLogger(utils.GetCallingPackage()))
 		return out
 	}
 
