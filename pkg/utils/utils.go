@@ -39,3 +39,13 @@ func BuildLoggerWithErr(ctx context.Context, err error) string {
 	correlationID := ctx.Value(middlewares.CorrelationKey)
 	return correlationID.(string) + " " + err.Error()
 }
+
+func BuildLoggerWithErr2(ctx context.Context, err error, pkg string) string {
+	correlationID := ctx.Value(middlewares.CorrelationKey)
+	return correlationID.(string) + " " + err.Error() + " - " + pkg
+}
+
+func BuildLoggerWithErr3(ctx context.Context, err string, pkg string) string {
+	correlationID := ctx.Value(middlewares.CorrelationKey)
+	return correlationID.(string) + " " + err + " - " + pkg
+}

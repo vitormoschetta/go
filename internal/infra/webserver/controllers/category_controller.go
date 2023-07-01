@@ -39,14 +39,14 @@ func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	responseItemsJSON, err := json.Marshal(items)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -61,20 +61,20 @@ func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	if item.ID == "" {
 		w.WriteHeader(http.StatusNotFound)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Not found"))
-		log.Print(utils.BuildLogger(ctx, "Not found") + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr3(ctx, "Not found", utils.GetCallingPackage()))
 		return
 	}
 	responseItemJSON, err := json.Marshal(item)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -87,7 +87,7 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	output := c.UseCase.Create(ctx, input)
@@ -95,10 +95,10 @@ func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(int(output.Code))
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePost))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -108,7 +108,7 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	output := c.UseCase.Update(ctx, input)
@@ -116,10 +116,10 @@ func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(int(output.Code))
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypePut))
 	_, _ = w.Write(outputJSON)
 }
 
@@ -132,9 +132,9 @@ func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	w.WriteHeader(int(output.Code))
+	w.WriteHeader(BuildHttpStatusCode(output.Code, VerbTypeDelete))
 	_, _ = w.Write(outputJSON)
 }
