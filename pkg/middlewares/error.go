@@ -2,7 +2,9 @@ package middlewares
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"runtime/debug"
 )
 
 type ErrorResponse struct {
@@ -18,6 +20,8 @@ func ErrorHandling(next http.Handler) http.Handler {
 		}
 		defer func() {
 			if r := recover(); r != nil {
+				log.Print(correlationID, " ", r)
+				debug.PrintStack()
 				output := ErrorResponse{
 					Errors:        []string{"Internal error"},
 					CorrelationID: correlationID,
