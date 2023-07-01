@@ -10,22 +10,22 @@ import (
 )
 
 type CategoryRepositoryFake struct {
-	Db        []category.Category
+	storage   []category.Category
 	SaveError bool
 }
 
 func NewCategoryRepositoryFake() *CategoryRepositoryFake {
 	return &CategoryRepositoryFake{
-		Db: []category.Category{},
+		storage: []category.Category{},
 	}
 }
 
 func (r *CategoryRepositoryFake) FindAll(ctx context.Context) (categories []category.Category, err error) {
-	return r.Db, nil
+	return r.storage, nil
 }
 
 func (r *CategoryRepositoryFake) FindByID(ctx context.Context, id string) (category category.Category, err error) {
-	for _, category := range r.Db {
+	for _, category := range r.storage {
 		if category.ID == id {
 			return category, nil
 		}
@@ -39,23 +39,23 @@ func (r *CategoryRepositoryFake) Save(ctx context.Context, p category.Category) 
 		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
 		return err
 	}
-	r.Db = append(r.Db, p)
+	r.storage = append(r.storage, p)
 	return nil
 }
 
 func (r *CategoryRepositoryFake) Update(ctx context.Context, p category.Category) error {
-	for i, category := range r.Db {
+	for i, category := range r.storage {
 		if category.ID == p.ID {
-			r.Db[i] = p
+			r.storage[i] = p
 		}
 	}
 	return nil
 }
 
 func (r *CategoryRepositoryFake) Delete(ctx context.Context, id string) error {
-	for i, category := range r.Db {
+	for i, category := range r.storage {
 		if category.ID == id {
-			r.Db = append(r.Db[:i], r.Db[i+1:]...)
+			r.storage = append(r.storage[:i], r.storage[i+1:]...)
 		}
 	}
 	return nil

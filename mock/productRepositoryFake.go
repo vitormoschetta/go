@@ -7,21 +7,21 @@ import (
 )
 
 type ProductRepositoryFake struct {
-	Db []product.Product
+	storage []product.Product
 }
 
 func NewProductRepositoryFake() product.IProductRepository {
 	return &ProductRepositoryFake{
-		Db: []product.Product{},
+		storage: []product.Product{},
 	}
 }
 
 func (r *ProductRepositoryFake) FindAll(ctx context.Context) (products []product.Product, err error) {
-	return r.Db, nil
+	return r.storage, nil
 }
 
 func (r *ProductRepositoryFake) FindByID(ctx context.Context, id string) (product product.Product, err error) {
-	for _, product := range r.Db {
+	for _, product := range r.storage {
 		if product.ID == id {
 			return product, nil
 		}
@@ -30,30 +30,30 @@ func (r *ProductRepositoryFake) FindByID(ctx context.Context, id string) (produc
 }
 
 func (r *ProductRepositoryFake) Save(ctx context.Context, p product.Product) error {
-	r.Db = append(r.Db, p)
+	r.storage = append(r.storage, p)
 	return nil
 }
 
 func (r *ProductRepositoryFake) Update(ctx context.Context, p product.Product) error {
-	for i, product := range r.Db {
+	for i, product := range r.storage {
 		if product.ID == p.ID {
-			r.Db[i] = p
+			r.storage[i] = p
 		}
 	}
 	return nil
 }
 
 func (r *ProductRepositoryFake) Delete(ctx context.Context, id string) error {
-	for i, product := range r.Db {
+	for i, product := range r.storage {
 		if product.ID == id {
-			r.Db = append(r.Db[:i], r.Db[i+1:]...)
+			r.storage = append(r.storage[:i], r.storage[i+1:]...)
 		}
 	}
 	return nil
 }
 
 func (r *ProductRepositoryFake) FindByCategory(ctx context.Context, categoryID string) (products []product.Product, err error) {
-	for _, product := range r.Db {
+	for _, product := range r.storage {
 		if product.Category.ID == categoryID {
 			products = append(products, product)
 		}
@@ -62,9 +62,9 @@ func (r *ProductRepositoryFake) FindByCategory(ctx context.Context, categoryID s
 }
 
 func (r *ProductRepositoryFake) ApplyPromotionOnProductsByCategory(ctx context.Context, categoryId string, percentage float64) error {
-	for i, product := range r.Db {
+	for i, product := range r.storage {
 		if product.Category.ID == categoryId {
-			r.Db[i].Price = product.Price - (product.Price * percentage)
+			r.storage[i].Price = product.Price - (product.Price * percentage)
 		}
 	}
 	return nil
