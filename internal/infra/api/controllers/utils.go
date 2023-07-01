@@ -16,27 +16,27 @@ const (
 )
 
 // TODO: rename to DomainCodeToHttpStatusCode
-func BuildHttpStatusCode(domainCode output.DomainCode, verb VerbType) int {
+func BuildHttpStatusCode(domainCode output.DomainCode, verb string) int {
 	switch domainCode {
 	case output.DomainCodeSuccess:
-		if verb == VerbTypePost {
-			return 201
+		if verb == http.MethodPost {
+			return http.StatusCreated
 		}
-		return 200
+		return http.StatusOK
 	case output.DomainCodeInvalidInput:
-		return 400
+		return http.StatusBadRequest
 	case output.DomainCodeInvalidEntity:
-		return 500
+		return http.StatusInternalServerError
 	case output.DomainCodeInternalError:
-		return 500
+		return http.StatusInternalServerError
 	case output.DomainCodeNotFound:
-		return 404
+		return http.StatusNotFound
 	default:
-		return 500
+		return http.StatusInternalServerError
 	}
 }
 
-func BuildHttpStatusCode2(output output.Output, verb VerbType, w *http.ResponseWriter) {
+func BuildHttpStatusCode2(output output.Output, verb string, w http.ResponseWriter) {
 	domainCode := output.GetCode()
-	(*w).WriteHeader(BuildHttpStatusCode(domainCode, verb))
+	w.WriteHeader(BuildHttpStatusCode(domainCode, verb))
 }

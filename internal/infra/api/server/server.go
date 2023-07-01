@@ -1,4 +1,4 @@
-package webserver
+package server
 
 import (
 	"log"
@@ -8,10 +8,10 @@ import (
 	_ "github.com/vitormoschetta/go/docs"
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	productApplication "github.com/vitormoschetta/go/internal/application/product"
+	"github.com/vitormoschetta/go/internal/infra/api/controllers"
 	"github.com/vitormoschetta/go/internal/infra/config"
 	"github.com/vitormoschetta/go/internal/infra/database"
 	"github.com/vitormoschetta/go/internal/infra/database/repositories"
-	"github.com/vitormoschetta/go/internal/infra/webserver/controllers"
 	"github.com/vitormoschetta/go/pkg/middlewares"
 )
 

@@ -1,4 +1,4 @@
-package controllers
+package responses
 
 import (
 	"github.com/vitormoschetta/go/pkg/output"

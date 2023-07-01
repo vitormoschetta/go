@@ -9,6 +9,8 @@ import (
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
 	"github.com/vitormoschetta/go/internal/domain/category"
 	"github.com/vitormoschetta/go/internal/domain/common"
+	"github.com/vitormoschetta/go/internal/infra/api/requests"
+	"github.com/vitormoschetta/go/internal/infra/api/responses"
 	"github.com/vitormoschetta/go/pkg/utils"
 )
 
@@ -61,31 +63,35 @@ func (c *CategoryController) Get(w http.ResponseWriter, r *http.Request) {
 
 func (c *CategoryController) Post(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var input categoryApplication.CreateCategoryInput
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	var request requests.CreateCategoryRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Bad request"))
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	output := c.UseCase.Create(ctx, input)
-	response := OutputToResponse(output)
-	BuildHttpStatusCode2(output, VerbTypePost, &w)
+	input := categoryApplication.NewCreateCategoryInput(request.Name)
+	output := c.UseCase.Create(ctx, *input)
+	response := responses.OutputToResponse(output)
+	BuildHttpStatusCode2(output, r.Method, w)
 	json.NewEncoder(w).Encode(response)
 }
 
 func (c *CategoryController) Put(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var input categoryApplication.UpdateCategoryInput
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+	var request requests.UpdateCategoryRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		// json.NewEncoder(w).Encode(utils.FormatErrOutWithMessage2(ctx, "Bad request"))
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Bad request"))
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	output := c.UseCase.Update(ctx, input)
-	response := OutputToResponse(output)
-	BuildHttpStatusCode2(output, VerbTypePost, &w)
+	input := categoryApplication.NewUpdateCategoryInput(request.ID, request.Name)
+	output := c.UseCase.Update(ctx, *input)
+	response := responses.OutputToResponse(output)
+	BuildHttpStatusCode2(output, r.Method, w)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -94,7 +100,7 @@ func (c *CategoryController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	output := c.UseCase.Delete(ctx, id)
-	response := OutputToResponse(output)
-	BuildHttpStatusCode2(output, VerbTypePost, &w)
+	response := responses.OutputToResponse(output)
+	BuildHttpStatusCode2(output, r.Method, w)
 	json.NewEncoder(w).Encode(response)
 }

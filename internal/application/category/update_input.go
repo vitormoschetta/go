@@ -5,6 +5,13 @@ type UpdateCategoryInput struct {
 	Name string
 }
 
+func NewUpdateCategoryInput(id, name string) *UpdateCategoryInput {
+	return &UpdateCategoryInput{
+		ID:   id,
+		Name: name,
+	}
+}
+
 func (c *UpdateCategoryInput) Validate() (errs []string) {
 	if c.ID == "" {
 		errs = append(errs, "ID is required")

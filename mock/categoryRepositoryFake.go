@@ -20,6 +20,10 @@ func NewCategoryRepositoryFake() *CategoryRepositoryFake {
 	}
 }
 
+func (r *CategoryRepositoryFake) Seed(items []category.Category) {
+	r.storage = items
+}
+
 func (r *CategoryRepositoryFake) FindAll(ctx context.Context) (categories []category.Category, err error) {
 	return r.storage, nil
 }

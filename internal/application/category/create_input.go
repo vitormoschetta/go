@@ -8,6 +8,12 @@ type CreateCategoryInput struct {
 	Name string
 }
 
+func NewCreateCategoryInput(name string) *CreateCategoryInput {
+	return &CreateCategoryInput{
+		Name: name,
+	}
+}
+
 func (c *CreateCategoryInput) Validate() (errs []string) {
 	if c.Name == "" {
 		errs = append(errs, "Name is required")

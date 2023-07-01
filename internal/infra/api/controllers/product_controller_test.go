@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	applicationProduct "github.com/vitormoschetta/go/internal/application/product"
 	domainProduct "github.com/vitormoschetta/go/internal/domain/product"
+	"github.com/vitormoschetta/go/internal/infra/api/responses"
 	"github.com/vitormoschetta/go/mock"
 	"github.com/vitormoschetta/go/pkg/middlewares"
 )
@@ -20,7 +21,7 @@ type ProductControllerTest struct {
 	productController *ProductController
 }
 
-func TestSuiteStart(t *testing.T) {
+func TestProductSuiteStart(t *testing.T) {
 	suite.Run(t, new(ProductControllerTest))
 }
 
@@ -100,7 +101,7 @@ func (suite *ProductControllerTest) TestPost() {
 	// Act
 	router.ServeHTTP(recorder, req)
 
-	var response Response
+	var response responses.Response
 	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &response)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal output")
