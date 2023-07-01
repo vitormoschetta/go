@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/vitormoschetta/go/pkg/output"
+import (
+	"net/http"
+
+	"github.com/vitormoschetta/go/pkg/output"
+)
 
 type VerbType int
 
@@ -11,6 +15,7 @@ const (
 	VerbTypeDelete VerbType = 4
 )
 
+// TODO: rename to DomainCodeToHttpStatusCode
 func BuildHttpStatusCode(domainCode output.DomainCode, verb VerbType) int {
 	switch domainCode {
 	case output.DomainCodeSuccess:
@@ -29,4 +34,9 @@ func BuildHttpStatusCode(domainCode output.DomainCode, verb VerbType) int {
 	default:
 		return 500
 	}
+}
+
+func BuildHttpStatusCode2(output output.Output, verb VerbType, w *http.ResponseWriter) {
+	domainCode := output.GetCode()
+	(*w).WriteHeader(BuildHttpStatusCode(domainCode, verb))
 }

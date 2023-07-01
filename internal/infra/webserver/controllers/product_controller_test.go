@@ -100,14 +100,14 @@ func (suite *ProductControllerTest) TestPost() {
 	// Act
 	router.ServeHTTP(recorder, req)
 
-	var out Output
-	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &out)
+	var response Response
+	errUnmarshal := json.Unmarshal(recorder.Body.Bytes(), &response)
 	if errUnmarshal != nil {
 		suite.Fail("Error unmarshal output")
 	}
 
 	// Assert
 	suite.Assert().Equal(http.StatusNotFound, recorder.Code)
-	suite.Assert().Len(out.Errors, 1)
-	suite.Assert().Equal("Category not found", out.Errors[0])
+	suite.Assert().Len(response.Errors, 1)
+	suite.Assert().Equal("Category not found", response.Errors[0])
 }

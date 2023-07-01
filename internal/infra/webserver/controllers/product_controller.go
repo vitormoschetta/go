@@ -112,7 +112,8 @@ func (c *ProductController) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	output := c.UseCase.Create(ctx, input)
-	outputJSON, err := json.Marshal(ToOutput(output))
+	response := OutputToResponse(output)
+	outputJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
@@ -133,7 +134,8 @@ func (c *ProductController) Put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	output := c.UseCase.Update(ctx, input)
-	outputJSON, err := json.Marshal(ToOutput(output))
+	response := OutputToResponse(output)
+	outputJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
@@ -149,7 +151,8 @@ func (c *ProductController) Delete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	output := c.UseCase.Delete(ctx, id)
-	outputJSON, err := json.Marshal(ToOutput(output))
+	response := OutputToResponse(output)
+	outputJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
@@ -170,7 +173,8 @@ func (c *ProductController) PutPromotion(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	output := c.UseCase.ApplyPromotion(ctx, input)
-	outputJSON, err := json.Marshal(ToOutput(output))
+	response := OutputToResponse(output)
+	outputJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))
@@ -191,7 +195,8 @@ func (c *ProductController) PutPromotionbyCategory(w http.ResponseWriter, r *htt
 		return
 	}
 	output := c.UseCase.ApplyPromotionOnProductsByCategory(ctx, input)
-	outputJSON, err := json.Marshal(ToOutput(output))
+	response := OutputToResponse(output)
+	outputJSON, err := json.Marshal(response)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(utils.FormatErrOutWithMessage(ctx, "Internal error"))

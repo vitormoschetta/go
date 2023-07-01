@@ -18,6 +18,11 @@ func FormatErrOutWithMessage(ctx context.Context, message string) []byte {
 	return []byte(`{"errors": ["` + message + `"], "correlation_id": "` + correlationID.(string) + `"}`)
 }
 
+func FormatErrOutWithMessage2(ctx context.Context, message string) string {
+	correlationID := ctx.Value(middlewares.CorrelationKey)
+	return `{"errors": ["` + message + `"], "correlation_id": "` + correlationID.(string) + `"}`
+}
+
 func GetStackTrace() string {
 	buf := make([]byte, 1<<16)
 	stackLen := runtime.Stack(buf, false)
