@@ -26,5 +26,8 @@ func (p *UpdateProductInput) Validate() (errs []string) {
 	if p.Price <= 0 {
 		errs = append(errs, "Price is less than or equal to zero")
 	}
+	if p.CategoryId == "" {
+		errs = append(errs, "Category ID is required")
+	}
 	return errs
 }
