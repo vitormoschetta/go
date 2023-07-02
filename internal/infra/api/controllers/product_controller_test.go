@@ -61,6 +61,13 @@ func (suite *ProductControllerTest) TestGetAll_Ok() {
 	suite.Assert().NotNil(response)
 	suite.Assert().NotNil(response.Data)
 	suite.Assert().Len(response.Data, 2)
+	suite.Assert().NotNil(response.Pagination)
+
+	paginationMap := response.Pagination.(map[string]interface{})
+	suite.Assert().Equal(DefaultCurrentPage, int(paginationMap["current_page"].(float64)))
+	suite.Assert().Equal(DefaultPageSize, int(paginationMap["page_size"].(float64)))
+	suite.Assert().Equal(2, int(paginationMap["total"].(float64)))
+	suite.Assert().Equal(1, int(paginationMap["last_page"].(float64)))
 }
 
 func (suite *ProductControllerTest) TestGet_Ok() {

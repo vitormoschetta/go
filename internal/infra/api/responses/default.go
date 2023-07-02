@@ -8,9 +8,10 @@ import (
 )
 
 type Response struct {
-	Errors        []string    `json:"errors"`
-	CorrelationID string      `json:"correlation_id"`
-	Data          interface{} `json:"data"`
+	Errors        []string `json:"errors"`
+	CorrelationID string   `json:"correlation_id"`
+	Pagination    any      `json:"pagination"`
+	Data          any      `json:"data"`
 }
 
 func OutputToResponse(output output.Output) Response {
@@ -21,10 +22,19 @@ func OutputToResponse(output output.Output) Response {
 	}
 }
 
-func ItemToResponse(item interface{}, err string, ctx context.Context) Response {
+func ItemToResponse(item any, err string, ctx context.Context) Response {
 	return Response{
 		Errors:        []string{err},
 		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
 		Data:          item,
+	}
+}
+
+func ItemToResponseWithPagination(item any, err string, ctx context.Context, pagination any) Response {
+	return Response{
+		Errors:        []string{err},
+		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
+		Data:          item,
+		Pagination:    pagination,
 	}
 }

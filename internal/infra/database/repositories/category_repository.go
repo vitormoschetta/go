@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/vitormoschetta/go/internal/domain/category"
+	"github.com/vitormoschetta/go/pkg/pagination"
 	"github.com/vitormoschetta/go/pkg/utils"
 )
 
@@ -17,10 +18,18 @@ func NewCategoryRepository(db *sql.DB) *CategoryRepository {
 	return &CategoryRepository{Db: db}
 }
 
-func (r *CategoryRepository) FindAll(ctx context.Context) (categories []category.Category, err error) {
-	rows, err := r.Db.Query("SELECT id, name FROM categories")
+func (r *CategoryRepository) FindAll(ctx context.Context, pagination *pagination.Pagination) (categories []category.Category, err error) {
+	countQuery := "SELECT COUNT(id) FROM categories"
+	err = r.Db.QueryRow(countQuery).Scan(&pagination.Total)
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
+		return
+	}
+	pagination.BuildLastPage()
+
+	rows, err := r.Db.Query("SELECT id, name FROM categories LIMIT ?, ?", pagination.GetOffset(), pagination.PageSize)
+	if err != nil {
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
 	defer rows.Close()
@@ -29,7 +38,7 @@ func (r *CategoryRepository) FindAll(ctx context.Context) (categories []category
 		var c category.Category
 		err := rows.Scan(&c.ID, &c.Name)
 		if err != nil {
-			log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+			log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 			break
 		}
 		categories = append(categories, c)
@@ -45,7 +54,7 @@ func (r *CategoryRepository) FindByID(ctx context.Context, id string) (category 
 			return category, nil
 		}
 		err = errData
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 	}
 	return
 }
@@ -53,12 +62,12 @@ func (r *CategoryRepository) FindByID(ctx context.Context, id string) (category 
 func (r *CategoryRepository) Save(ctx context.Context, p category.Category) error {
 	stmt, err := r.Db.Prepare("INSERT INTO categories (id, name) VALUES (?, ?)")
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	res, err := stmt.Exec(p.ID, p.Name)
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	if res != nil {
@@ -70,12 +79,12 @@ func (r *CategoryRepository) Save(ctx context.Context, p category.Category) erro
 func (r *CategoryRepository) Update(ctx context.Context, p category.Category) error {
 	stmt, err := r.Db.Prepare("UPDATE categories SET name = ? WHERE id = ?")
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	res, err := stmt.Exec(p.Name, p.ID)
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	if res != nil {
@@ -87,12 +96,12 @@ func (r *CategoryRepository) Update(ctx context.Context, p category.Category) er
 func (r *CategoryRepository) Delete(ctx context.Context, id string) error {
 	stmt, err := r.Db.Prepare("DELETE FROM categories WHERE id = ?")
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	res, err := stmt.Exec(id)
 	if err != nil {
-		log.Print(utils.BuildLoggerWithErr(ctx, err) + " - " + utils.GetCallingPackage())
+		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return err
 	}
 	if res != nil {

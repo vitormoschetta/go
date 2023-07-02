@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/vitormoschetta/go/internal/domain/product"
+	"github.com/vitormoschetta/go/pkg/pagination"
 )
 
 type ProductRepositoryFake struct {
@@ -20,8 +21,13 @@ func (r *ProductRepositoryFake) Seed(items []product.Product) {
 	r.storage = items
 }
 
-func (r *ProductRepositoryFake) FindAll(ctx context.Context) (products []product.Product, err error) {
-	return r.storage, nil
+func (r *ProductRepositoryFake) FindAll(ctx context.Context, pagination *pagination.Pagination) (products []product.Product, err error) {
+	pagination.Total = len(r.storage)
+	pagination.BuildLastPage()
+	for _, product := range r.storage {
+		products = append(products, product)
+	}
+	return
 }
 
 func (r *ProductRepositoryFake) FindByID(ctx context.Context, id string) (product product.Product, err error) {

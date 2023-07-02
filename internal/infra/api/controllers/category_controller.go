@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	categoryApplication "github.com/vitormoschetta/go/internal/application/category"
@@ -11,6 +12,7 @@ import (
 	"github.com/vitormoschetta/go/internal/domain/common"
 	"github.com/vitormoschetta/go/internal/infra/api/requests"
 	"github.com/vitormoschetta/go/internal/infra/api/responses"
+	"github.com/vitormoschetta/go/pkg/pagination"
 	"github.com/vitormoschetta/go/pkg/utils"
 )
 
@@ -29,8 +31,20 @@ func NewCategoryController(repository common.IRepository[category.Category], use
 func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var response responses.Response
+	var pagination pagination.Pagination
+	var err error
 
-	items, err := c.Repository.FindAll(ctx)
+	queryParams := r.URL.Query()
+	pagination.CurrentPage, err = strconv.Atoi(queryParams.Get("page"))
+	if err != nil {
+		pagination.CurrentPage = DefaultCurrentPage
+	}
+	pagination.PageSize, err = strconv.Atoi(queryParams.Get("page_size"))
+	if err != nil {
+		pagination.PageSize = DefaultPageSize
+	}
+
+	items, err := c.Repository.FindAll(ctx, &pagination)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response = responses.ItemToResponse(items, "Internal error", ctx)
@@ -38,7 +52,7 @@ func (c *CategoryController) GetAll(w http.ResponseWriter, r *http.Request) {
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
 	}
-	response = responses.ItemToResponse(items, "", ctx)
+	response = responses.ItemToResponseWithPagination(items, "", ctx, pagination)
 	json.NewEncoder(w).Encode(response)
 }
 
