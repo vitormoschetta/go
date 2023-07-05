@@ -29,8 +29,9 @@ func (r *ProductRepository) FindAll(ctx context.Context, pagination *pagination.
 
 	query := "SELECT p.id, p.name, p.price, c.id, c.name "
 	query += "FROM products p "
-	query += "INNER JOIN categories c ON p.category_id = c.id"
-	rows, err := r.Db.Query(query)
+	query += "INNER JOIN categories c ON p.category_id = c.id "
+	query += "LIMIT ?, ?"
+	rows, err := r.Db.Query(query, pagination.GetOffset(), pagination.PageSize)
 	if err != nil {
 		log.Print(utils.BuildLoggerWithErr2(ctx, err, utils.GetCallingPackage()))
 		return
