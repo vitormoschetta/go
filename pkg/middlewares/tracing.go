@@ -28,6 +28,14 @@ func Tracing(next http.Handler) http.Handler {
 	})
 }
 
+func GetTraceID(ctx context.Context) string {
+	traceID, ok := ctx.Value(CorrelationKey).(string)
+	if !ok {
+		return ""
+	}
+	return traceID
+}
+
 func generateTraceID() string {
 	pid := os.Getpid()
 	timestamp := time.Now().UnixNano()

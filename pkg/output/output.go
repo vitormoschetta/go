@@ -28,7 +28,7 @@ func NewOutput(ctx context.Context) Output {
 	return Output{
 		code:          DomainCodeSuccess,
 		errors:        []string{},
-		correlationID: ctx.Value(middlewares.CorrelationKey).(string),
+		correlationID: middlewares.GetTraceID(ctx),
 		data:          nil,
 	}
 }

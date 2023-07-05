@@ -12,7 +12,7 @@ type TraceTransport struct {
 
 func (t *TraceTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	ctx := req.Context()
-	traceID := ctx.Value(middlewares.CorrelationKey).(string)
+	traceID := middlewares.GetTraceID(ctx)
 	req.Header.Set(middlewares.CorrelationIDHeader, traceID)
 	return t.Base.RoundTrip(req)
 }

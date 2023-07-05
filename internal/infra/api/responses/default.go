@@ -25,7 +25,7 @@ func OutputToResponse(output output.Output) Response {
 func ItemToResponse(item any, err string, ctx context.Context) Response {
 	return Response{
 		Errors:        []string{err},
-		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
+		CorrelationID: middlewares.GetTraceID(ctx),
 		Data:          item,
 	}
 }
@@ -33,7 +33,7 @@ func ItemToResponse(item any, err string, ctx context.Context) Response {
 func ItemToResponseWithPagination(item any, err string, ctx context.Context, pagination any) Response {
 	return Response{
 		Errors:        []string{err},
-		CorrelationID: ctx.Value(middlewares.CorrelationKey).(string),
+		CorrelationID: middlewares.GetTraceID(ctx),
 		Data:          item,
 		Pagination:    pagination,
 	}

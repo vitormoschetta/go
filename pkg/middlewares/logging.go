@@ -27,6 +27,7 @@ func LoggingHandling(next http.Handler) http.Handler {
 		next.ServeHTTP(ww, r)
 
 		fields := []zapcore.Field{
+			zap.String("RequestID", GetTraceID(r.Context())),
 			zap.String("method", r.Method),
 			zap.String("url", r.URL.String()),
 			zap.Int("status", ww.Status()),

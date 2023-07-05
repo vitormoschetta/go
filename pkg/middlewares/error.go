@@ -14,10 +14,7 @@ type ErrorResponse struct {
 
 func ErrorHandling(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		correlationID, ok := r.Context().Value(CorrelationKey).(string)
-		if !ok {
-			correlationID = "unknown"
-		}
+		correlationID := GetTraceID(r.Context())
 		defer func() {
 			if r := recover(); r != nil {
 				log.Print(correlationID, " ", r)
